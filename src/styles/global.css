@@ -206,4 +206,33 @@
   .skip-link:focus {
     top: var(--space-4);
   }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    padding: var(--space-3) var(--space-5);
+    border-radius: var(--radius-sm);
+    border: var(--border-width) solid transparent;
+  }
+
+  .btn--primary {
+    background: var(--color-text);
+    color: var(--color-surface);
+  }
+
+  .btn--primary:hover {
+    background: var(--color-accent);
+  }
+
+  .btn--secondary {
+    border-color: var(--color-line);
+    color: var(--color-text);
+  }
+
+  .btn--secondary:hover {
+    border-color: var(--color-text);
+  }
 }
