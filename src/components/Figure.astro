@@ -89,6 +89,37 @@ const descId = description ? `${id ?? caption.toLowerCase().replace(/[^a-z0-9]+/
     background: none;
   }
 
+  .figure__media--table :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .figure__media--table :global(th),
+  .figure__media--table :global(td) {
+    text-align: left;
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-sm);
+  }
+
+  .figure__media--table :global(th:first-child),
+  .figure__media--table :global(td:first-child) {
+    padding-left: 0;
+    width: 28%;
+  }
+
+  .figure__media--table :global(thead th) {
+    font-weight: 500;
+    border-bottom: 1.5px solid var(--color-text);
+  }
+
+  .figure__media--table :global(tbody tr) {
+    border-bottom: var(--border-width) solid var(--color-line);
+  }
+
+  .figure__media--table :global(th[scope="row"]) {
+    font-weight: 500;
+  }
+
   .figure__caption {
     margin-top: var(--space-3);
     font-size: var(--text-sm);
