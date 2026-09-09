@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import TagList from "../../components/TagList.astro";
+import FeaturedEntry from "../../components/FeaturedEntry.astro";
 import { isListable, sortByDateDesc } from "../../lib/content";
 
 const entries = sortByDateDesc((await getCollection("architecture")).filter(isListable));
@@ -20,24 +21,36 @@ const entries = sortByDateDesc((await getCollection("architecture")).filter(isLi
       reference pattern, not client work.
     </p>
 
-    <ol class="architecture-index__list">
-      {
-        entries.map((entry, i) => (
-          <li class="architecture-index__item">
-            <span class="architecture-index__number">{String(i + 1).padStart(2, "0")}</span>
-            <div>
-              <p class="architecture-index__type">{entry.data.architectureType} architecture</p>
-              <h2><a href={`/architecture/${entry.id}/`}>{entry.data.title}</a></h2>
-              <p class="architecture-index__description">{entry.data.description}</p>
-              <TagList patternTags={entry.data.patternTags} stackTags={entry.data.stackTags} />
-              <a class="architecture-index__link" href={`/architecture/${entry.id}/`}>
-                Explore →
-              </a>
-            </div>
-          </li>
-        ))
-      }
-    </ol>
+    {
+      entries.length === 1 ? (
+        <FeaturedEntry
+          href={`/architecture/${entries[0].id}/`}
+          title={entries[0].data.title}
+          description={entries[0].data.description}
+          date={entries[0].data.date}
+          eyebrow={`${entries[0].data.architectureType} architecture`}
+          patternTags={entries[0].data.patternTags}
+          stackTags={entries[0].data.stackTags}
+        />
+      ) : (
+        <ol class="architecture-index__list">
+          {entries.map((entry, i) => (
+            <li class="architecture-index__item">
+              <span class="architecture-index__number">{String(i + 1).padStart(2, "0")}</span>
+              <div>
+                <p class="architecture-index__type">{entry.data.architectureType} architecture</p>
+                <h2><a href={`/architecture/${entry.id}/`}>{entry.data.title}</a></h2>
+                <p class="architecture-index__description">{entry.data.description}</p>
+                <TagList patternTags={entry.data.patternTags} stackTags={entry.data.stackTags} />
+                <a class="architecture-index__link" href={`/architecture/${entry.id}/`}>
+                  Explore →
+                </a>
+              </div>
+            </li>
+          ))}
+        </ol>
+      )
+    }
   </div>
 </BaseLayout>
 

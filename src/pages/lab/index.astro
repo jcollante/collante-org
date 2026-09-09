@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ArticleCard from "../../components/ArticleCard.astro";
+import FeaturedEntry from "../../components/FeaturedEntry.astro";
 import { isListable, sortByDateDesc } from "../../lib/content";
 
 const entries = sortByDateDesc((await getCollection("lab")).filter(isListable));
@@ -19,21 +20,33 @@ const entries = sortByDateDesc((await getCollection("lab")).filter(isListable));
       Implementation curiosity, not the main event — selected experiments in emerging Data & AI patterns.
     </p>
 
-    <ul class="listing__list">
-      {
-        entries.map((entry) => (
-          <ArticleCard
-            href={`/lab/${entry.id}/`}
-            title={entry.data.title}
-            description={entry.data.description}
-            date={entry.data.date}
-            eyebrow={entry.data.experimentStatus}
-            patternTags={entry.data.patternTags}
-            stackTags={entry.data.stackTags}
-          />
-        ))
-      }
-    </ul>
+    {
+      entries.length === 1 ? (
+        <FeaturedEntry
+          href={`/lab/${entries[0].id}/`}
+          title={entries[0].data.title}
+          description={entries[0].data.description}
+          date={entries[0].data.date}
+          eyebrow={entries[0].data.experimentStatus}
+          patternTags={entries[0].data.patternTags}
+          stackTags={entries[0].data.stackTags}
+        />
+      ) : (
+        <ul class="listing__list">
+          {entries.map((entry) => (
+            <ArticleCard
+              href={`/lab/${entry.id}/`}
+              title={entry.data.title}
+              description={entry.data.description}
+              date={entry.data.date}
+              eyebrow={entry.data.experimentStatus}
+              patternTags={entry.data.patternTags}
+              stackTags={entry.data.stackTags}
+            />
+          ))}
+        </ul>
+      )
+    }
   </div>
 </BaseLayout>
 

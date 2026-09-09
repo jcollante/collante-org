@@ -1,0 +1,85 @@
+---
+/**
+ * Used instead of ArticleCard/a list row when a collection index has
+ * exactly one listable entry — a single row styled for a scannable list
+ * reads as an empty template rather than a deliberate showcase. Switches
+ * back to the normal list treatment automatically once a collection has
+ * more than one entry.
+ */
+import TagList from "./TagList.astro";
+
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  date: Date;
+  eyebrow?: string;
+  patternTags?: string[];
+  stackTags?: string[];
+}
+
+const { href, title, description, date, eyebrow, patternTags = [], stackTags = [] } = Astro.props;
+const dateFormatter = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "long", day: "numeric" });
+---
+
+<div class="featured-entry">
+  {eyebrow && <p class="featured-entry__eyebrow">{eyebrow}</p>}
+  <h2 class="featured-entry__title"><a href={href}>{title}</a></h2>
+  <p class="featured-entry__description">{description}</p>
+  <div class="featured-entry__meta">
+    <time datetime={date.toISOString()}>{dateFormatter.format(date)}</time>
+    <TagList patternTags={patternTags} stackTags={stackTags} />
+  </div>
+  <a href={href} class="featured-entry__link btn btn--secondary">Explore →</a>
+</div>
+
+<style>
+  .featured-entry {
+    margin-top: var(--space-8);
+    padding: var(--space-7) var(--space-6);
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-line);
+  }
+
+  .featured-entry__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .featured-entry__title {
+    margin-top: var(--space-2);
+    font-size: var(--text-3xl);
+  }
+
+  .featured-entry__title a:hover {
+    color: var(--color-accent);
+  }
+
+  .featured-entry__description {
+    margin-top: var(--space-3);
+    max-width: var(--width-reading);
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+
+  .featured-entry__meta {
+    margin-top: var(--space-5);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .featured-entry__meta time {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .featured-entry__link {
+    margin-top: var(--space-6);
+  }
+</style>
