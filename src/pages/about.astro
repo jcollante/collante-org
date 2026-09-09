@@ -1,6 +1,9 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { siteConfig } from "../lib/site";
+import { personJsonLd } from "../lib/personJsonLd";
+
+const canonicalUrl = new URL("/about/", siteConfig.url).toString();
 ---
 
 <BaseLayout
@@ -8,6 +11,18 @@ import { siteConfig } from "../lib/site";
   description={`${siteConfig.name}, ${siteConfig.role} — background, expertise, and professional links.`}
   width="reading"
 >
+  <Fragment slot="head">
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:title" content={`About — ${siteConfig.name}`} />
+    <meta property="og:description" content={`${siteConfig.name}, ${siteConfig.role} — background, expertise, and professional links.`} />
+    <meta property="og:type" content="profile" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={new URL("/og-default.png", siteConfig.url).toString()} />
+    <meta property="og:site_name" content="collante.ai" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(personJsonLd())} />
+  </Fragment>
+
   <div class="about">
     <p class="about__eyebrow">About</p>
     <h1>{siteConfig.name}</h1>

@@ -129,12 +129,12 @@ Do the phases roughly in order. Phase 12 (writing the actual launch content) is 
 
 **Goal:** independent discoverability for every article.
 
-- [ ] Confirm `@astrojs/sitemap` output at `/sitemap-index.xml`.
-- [ ] Add an RSS feed via `@astrojs/rss` at `/rss.xml`.
-- [ ] Add `public/robots.txt` referencing the sitemap.
-- [ ] Add `Person` JSON-LD to the homepage and About page.
-- [ ] Verify Open Graph tags render correctly by testing a real article URL through a social-preview debugger (LinkedIn Post Inspector or similar).
-- [ ] Note (don't build yet): automated OG image generation is V1.5 — a static, hand-made default OG image is fine for launch.
+- [x] Confirmed `@astrojs/sitemap` output at `/sitemap-index.xml` (valid, references `/sitemap-0.xml`).
+- [x] Added `src/pages/rss.xml.ts` aggregating all five collections' published entries, sorted newest-first — validated the actual XML output by hand, correct.
+- [x] Added `public/robots.txt` referencing the sitemap.
+- [x] Added `Person` JSON-LD (`src/lib/personJsonLd.ts`, shared) to the homepage and About page — verified programmatically via the rendered `<script type="application/ld+json">`.
+- [x] Built a real static default OG image (`public/og-default.png`, 1200×630) — rendered from an HTML mockup via Playwright screenshot at exact dimensions, using the real self-hosted fonts (base64-embedded so the headless render actually picks them up — `file://` `@font-face` sources don't reliably load in headless Chromium, and `document.fonts.ready` confirmed load status before the screenshot). Wired into every page's OG meta tags.
+- [ ] **Deferred to Phase 9** — verifying Open Graph tags through a live social-preview debugger (LinkedIn Post Inspector) needs a real publicly-reachable URL, which doesn't exist until deployment. Meta tag correctness (title/description/type/url/image, canonical, JSON-LD) already verified directly via rendered HTML for both articles and the homepage/About.
 
 **Definition of done:** sitemap and RSS both validate, robots.txt is correct, and a real article link previews acceptably when pasted into LinkedIn's post composer (test with an unpublished/unlisted draft if you don't want it public yet).
 
