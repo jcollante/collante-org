@@ -175,6 +175,43 @@ const jsonLd = {
     padding: 0.1em 0.35em;
   }
 
+  /*
+    Universal table styling — applies to every <table> in article content,
+    whether it's wrapped in Figure (variant="table") or written directly as
+    a raw MDX/markdown table. Centralized here (not duplicated per-table)
+    so a table can't silently ship with zero styling just because an author
+    didn't route it through Figure.
+  */
+  .article__body :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--text-sm);
+  }
+
+  .article__body :global(th),
+  .article__body :global(td) {
+    text-align: left;
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .article__body :global(th:first-child),
+  .article__body :global(td:first-child) {
+    padding-left: 0;
+  }
+
+  .article__body :global(thead th) {
+    font-weight: 500;
+    border-bottom: 1.5px solid var(--color-text);
+  }
+
+  .article__body :global(tbody tr) {
+    border-bottom: var(--border-width) solid var(--color-line);
+  }
+
+  .article__body :global(th[scope="row"]) {
+    font-weight: 500;
+  }
+
   .article__footer {
     margin-top: var(--space-8);
     padding-top: var(--space-5);

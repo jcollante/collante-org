@@ -10,6 +10,8 @@ maturityDimensions: [governance, automation, observability, security, operabilit
 architectureDomains: ["Unity Catalog governance", "CI/CD for data & ML", "Workspace and cluster policy", "Cost visibility and chargeback"]
 ---
 
+import Figure from "../../components/Figure.astro";
+
 ## Problem
 
 A Databricks proof-of-concept and a Databricks production platform are built from the same primitives but operate under different rules. Most stalled rollouts fail not because the technology can't scale, but because nobody decided, before the PoC succeeded, what "production" was going to require of governance, automation, and cost control.
@@ -22,6 +24,8 @@ Platform and data engineering teams that have a working Databricks PoC and a man
 
 The accelerator scores a platform across six maturity dimensions — governance, automation, observability, security, operability, and cost — on a simple four-stage scale: ad hoc, managed, standardized, and optimized. The scoring is deliberately coarse; the value is in identifying which dimension is weakest, not in producing a precise number.
 
+<Figure caption="Maturity scoring by dimension, ad hoc through optimized" width="wide" variant="table">
+
 | Dimension | Ad hoc | Managed | Standardized | Optimized |
 |---|---|---|---|---|
 | Governance | No catalog | Catalog exists, inconsistently used | Unity Catalog enforced platform-wide | Automated access certification |
@@ -30,6 +34,8 @@ The accelerator scores a platform across six maturity dimensions — governance,
 | Security | Shared credentials | Per-workspace policy | Centralized identity, network isolation | Continuous policy-as-code enforcement |
 | Operability | Tribal knowledge | Runbooks exist | On-call rotation, defined SLAs | Self-service platform with guardrails |
 | Cost | No visibility | Monthly billing review | Per-team chargeback | Automated budget policy enforcement |
+
+</Figure>
 
 ## Architecture
 

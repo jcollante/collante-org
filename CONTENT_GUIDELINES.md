@@ -39,6 +39,17 @@ language, "revolutionary", "game-changing", "unlock", "transform your business",
 Prefer: "This pattern reduces operational coupling, but introduces another governance boundary." over
 "This innovative solution unlocks unprecedented enterprise agility."
 
+## Tables
+
+Wrap every table — markdown syntax or raw HTML — in `<Figure variant="table">`, not as a bare table in
+the body. Figure gives it the horizontal-scroll safety net for narrow viewports and a real caption;
+without it, a wide table just overflows the page on mobile with no way to reach the rest of it. Visual
+styling (header rule, row dividers, alignment) is universal — it's centralized in `ArticleLayout`'s
+`.article__body` and applies to any table automatically — but the *Figure wrapper itself* is not
+automatic, so add it explicitly. Remember to `import Figure from "../../components/Figure.astro"` at the
+top of the MDX file, and leave a blank line before and after a markdown-syntax table inside `<Figure>`
+— MDX needs it to parse the table as markdown rather than JSX children text.
+
 ## Before publishing, check every piece against
 
 - [ ] Nothing in this piece could identify a specific client, employer engagement, or confidential project.
