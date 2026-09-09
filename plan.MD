@@ -177,11 +177,11 @@ Do the phases roughly in order. Phase 12 (writing the actual launch content) is 
 
 **Goal:** hit the Lighthouse targets for real, not just in theory.
 
-- [ ] Run Lighthouse against the deployed production site (not localhost — real network conditions matter for fonts/images).
-- [ ] Fix any CLS from font loading (check preload is only on the one critical weight, per the spec).
-- [ ] Confirm zero client-side Mermaid runtime is shipped (check the network tab for `mermaid` in any JS bundle — there shouldn't be one).
-- [ ] Manually tab through the entire site with a keyboard only, no mouse — every interactive element must be reachable and show a visible focus state.
-- [ ] Test with a screen reader on at least the homepage, one article, and one diagram-heavy page.
+- [x] **Ran Lighthouse locally** against the production build (`astro build` + `astro preview`) — no live deployment exists yet (Phase 9 is blocked on your accounts), so this isn't the real deployed-site pass the spec calls for. Scores: homepage, architecture detail (diagram-heavy), and About all **100/100/100/100**, CLS 0 on every page checked. **Re-run for real once deployed** — real network/CDN conditions can differ from localhost.
+- [x] CLS is 0 on every page checked locally. Font preload is limited to the one critical weight (Inter, used site-wide immediately); IBM Plex Mono isn't preloaded since it's used selectively (ADR ids, metadata, code).
+- [x] Confirmed zero client-side JS ships **at all** (not just no Mermaid) — `dist/_astro/` contains only 2 CSS files, no JS bundles whatsoever. The site is fully static/no-JS by construction, not just Mermaid-free.
+- [x] Scripted a keyboard-only tab-through (not manual) across 5 page types (homepage, architecture detail, ADR detail, a tag page, About): every visible focusable element reachable in order, 0 missing visible-focus outlines, no premature loops, on every page tested.
+- [ ] **Not done — no screen reader available in this environment.** I have not run an actual VoiceOver/NVDA pass, so I can't claim that's verified. What I have done throughout every phase is automated axe checks (0 violations, any page, any phase) plus programmatic accessibility-tree checks — confirming diagrams expose a single `role="img"` + accessible name/description, the decision-matrix table keeps native table semantics with no `role="img"` wrapper, and focus order/visibility are correct. That's a real signal but not a substitute for actually listening to a screen reader read the page — do that pass yourself (or ask me to walk through what to listen for) before launch.
 
 **Definition of done:** Lighthouse Performance/Accessibility/Best Practices/SEO all ≥95 on the deployed site, and the manual keyboard/screen-reader pass turns up no dead ends.
 
