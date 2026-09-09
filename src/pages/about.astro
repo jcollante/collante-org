@@ -1,0 +1,136 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { siteConfig } from "../lib/site";
+---
+
+<BaseLayout
+  title="About — collante.ai"
+  description={`${siteConfig.name}, ${siteConfig.role} — background, expertise, and professional links.`}
+  width="reading"
+>
+  <div class="about">
+    <p class="about__eyebrow">About</p>
+    <h1>{siteConfig.name}</h1>
+    <p class="about__role">{siteConfig.role}</p>
+
+    <!--
+      TODO: real content needed for launch — see CONTENT_GUIDELINES.md.
+      Everything below is structurally complete but placeholder text,
+      clearly marked, pending the real bio/credentials.
+    -->
+    <p class="about__positioning">
+      [TODO: 2–3 sentence positioning statement — what kind of problems you work on and for whom, in your
+      own words. Keep it to one paragraph; the full narrative goes below.]
+    </p>
+
+    <div class="about__portrait" role="img" aria-label="Portrait placeholder — replace with a real photo">
+      <span>Portrait — TODO: replace with a real photo (no circular crop)</span>
+    </div>
+
+    <section class="about__section">
+      <h2>Experience</h2>
+      <p>
+        [TODO: 1–2 paragraph experience narrative — the shape of the work, not a chronological CV. What
+        kinds of platforms, at what scale, for what kinds of organizations.]
+      </p>
+    </section>
+
+    <section class="about__section">
+      <h2>Areas of expertise</h2>
+      <ul class="about__list">
+        <li>[TODO: e.g. Enterprise data platform architecture]</li>
+        <li>[TODO: e.g. Governance and lineage at scale]</li>
+        <li>[TODO: e.g. Agentic AI system design]</li>
+      </ul>
+    </section>
+
+    <section class="about__section">
+      <h2>Selected technologies</h2>
+      <p class="about__tech-line">[TODO: e.g. Databricks · Azure · Unity Catalog · Snowflake]</p>
+    </section>
+
+    <section class="about__section">
+      <h2>Certifications</h2>
+      <ul class="about__list">
+        <li>[TODO: real certifications only — omit this section entirely if none apply]</li>
+      </ul>
+    </section>
+
+    <section class="about__section">
+      <h2>Contact</h2>
+      <ul class="about__links">
+        <li><a href={siteConfig.linkedInUrl}>LinkedIn</a></li>
+        <li><a href={`mailto:${siteConfig.email}`}>Email</a></li>
+        {siteConfig.githubUrl && <li><a href={siteConfig.githubUrl}>GitHub</a></li>}
+      </ul>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .about {
+    padding-block: var(--space-8) var(--space-9);
+  }
+
+  .about__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+
+  .about__role {
+    margin-top: var(--space-2);
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+  }
+
+  .about__positioning {
+    margin-top: var(--space-5);
+    font-size: var(--text-lg);
+    line-height: var(--leading-body);
+  }
+
+  .about__portrait {
+    margin-top: var(--space-7);
+    aspect-ratio: 4 / 3;
+    border: var(--border-width) dashed var(--color-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--space-4);
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .about__section {
+    margin-top: var(--space-8);
+  }
+
+  .about__list {
+    margin-top: var(--space-3);
+    padding-left: var(--space-5);
+    list-style: disc;
+  }
+
+  .about__list li + li {
+    margin-top: var(--space-2);
+  }
+
+  .about__tech-line {
+    margin-top: var(--space-3);
+    font-family: var(--font-mono);
+    color: var(--color-text-muted);
+  }
+
+  .about__links {
+    margin-top: var(--space-3);
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .about__links a {
+    color: var(--color-accent);
+  }
+</style>

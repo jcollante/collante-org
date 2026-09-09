@@ -62,10 +62,18 @@ const descId = description ? `${id ?? caption.toLowerCase().replace(/[^a-z0-9]+/
     max-width: var(--width-wide);
   }
 
+  .figure__media {
+    overflow-x: auto;
+  }
+
   .figure__media :global(svg),
   .figure__media :global(img) {
     display: block;
     width: 100%;
+    /* Legible floor before a dense diagram shrinks past readable text —
+       below this, .figure__media scrolls horizontally instead (spec: prefer
+       responsive viewBox scaling, horizontal scroll only as a last resort). */
+    min-width: 40rem;
     height: auto;
     border: var(--border-width) solid var(--color-line);
     background: var(--color-surface);

@@ -112,10 +112,12 @@ Do the phases roughly in order. Phase 12 (writing the actual launch content) is 
 
 **Goal:** every collection has a working index, and the homepage is assembled in the correct order.
 
-- [ ] Build `index.astro` for each of `architecture/`, `accelerators/`, `decisions/`, `insights/`, `lab/` — simple, editorial lists (title, date, one-line description, tags), sorted sensibly (decisions by number, others by date).
-- [ ] Build `about.astro` with the credibility strip (certifications, notable engagement scale, speaking/publications) — kept to one screen, not a résumé.
-- [ ] Assemble `index.astro` (homepage) in this order: header → hero (point of view first) → selected architecture (wide, flagship diagram) → editorial content-area list → 3–5 selected decisions → 1–2 latest insights → About excerpt → footer.
-- [ ] Write the actual hero point-of-view copy now, not a placeholder — this is the single highest-leverage sentence on the site.
+- [x] Built `index.astro` for each of `architecture/`, `accelerators/`, `decisions/`, `insights/`, `lab/`. Architecture uses the spec §22 numbered-editorial format (diagram thumbnails omitted — no preview-image field in the schema, not worth adding for one entry); the other four use a shared `ArticleCard.astro`; decisions sorted by `decisionNumber` desc, others by date desc, all via the Phase 2 `isListable`/`sortByDateDesc` helpers.
+- [x] Built `about.astro` — structurally complete but **explicitly TODO-marked** where I can't fabricate real content: positioning statement, experience narrative, areas of expertise, certifications, and portrait are all placeholder text pending the real bio (name/role are real, from the build spec). Kept to one screen, no skill bars/progress bars/chronological CV.
+- [x] Assembled homepage in the exact spec order: header → hero → selected architecture (wide, flagship diagram) → areas of practice (numbered editorial row, not cards) → selected decisions (typographic, no cards/thumbnails) → latest insights → About excerpt → footer. Selection uses the `featured` schema field rather than "latest N" so homepage curation is deliberate.
+- [x] Used the build spec's own point-of-view hero copy verbatim (§16's "architectural thesis" alternative — governance/reliability/operability as architectural properties, not afterthoughts) since it's real authored copy, not a placeholder, and it echoes the Insights piece's theme.
+- [x] Fixed a real mobile issue found via screenshot: the flagship diagram shrank to illegible text at narrow viewports. `Figure.astro` now gives diagram media a 40rem legible floor with `overflow-x: auto`, so it scrolls horizontally instead of shrinking past readability (spec §10: prefer responsive viewBox scaling, horizontal scroll only as a last resort).
+- [x] Verified: all 25 pages build, 0 axe violations and 0 failed requests across homepage + all 5 index pages + About, confirmed visually via full-page screenshots at desktop and mobile widths.
 
 **Definition of done:** every nav link resolves to a real, populated page; the homepage reads correctly top to bottom with the placeholder content in place; nothing on the homepage is a chronological "everything" feed.
 

@@ -1,15 +1,341 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Figure from "../components/Figure.astro";
+import EnterpriseDataAiPlatform from "../components/diagrams/EnterpriseDataAiPlatform.astro";
+import TagList from "../components/TagList.astro";
+import { isListable, sortByDateDesc } from "../lib/content";
+import { siteConfig } from "../lib/site";
+
+const architectureEntries = (await getCollection("architecture")).filter(isListable);
+const flagshipArchitecture =
+  architectureEntries.find((e) => e.data.featured) ?? architectureEntries[0];
+
+const decisionEntries = (await getCollection("decisions"))
+  .filter(isListable)
+  .filter((e) => e.data.featured)
+  .sort((a, b) => b.data.decisionNumber - a.data.decisionNumber)
+  .slice(0, 5);
+
+const insightEntries = sortByDateDesc(
+  (await getCollection("insights")).filter(isListable).filter((e) => e.data.featured),
+).slice(0, 2);
+
+function pad(n: number): string {
+  return String(n).padStart(3, "0");
+}
+
+const areasOfPractice = [
+  { number: "01", title: "Architecture", href: "/architecture/", description: "Reference architectures for enterprise Data & AI systems." },
+  { number: "02", title: "Accelerators", href: "/accelerators/", description: "Reusable frameworks for moving from PoC to production." },
+  { number: "03", title: "Insights", href: "/insights/", description: "Architecture decisions, analyses and perspectives." },
+  { number: "04", title: "Lab", href: "/lab/", description: "Selected experiments in emerging Data & AI patterns." },
+] as const;
 ---
 
-<BaseLayout width="standard">
-  <section style="padding-block: var(--space-9);">
-    <p style="font-family: var(--font-mono); color: var(--color-text-muted); font-size: var(--text-sm);">
-      DATA &amp; AI ARCHITECT
+<BaseLayout title="collante.ai — Jonatan Collante, Data & AI Architect" description="I design governed, scalable and production-ready data and AI platforms for enterprise environments.">
+  <section class="hero container container--standard">
+    <p class="hero__eyebrow">Data &amp; AI Architect</p>
+    <h1>{siteConfig.name}</h1>
+    <p class="hero__thesis">
+      I believe enterprise Data &amp; AI platforms should make governance, reliability and operability
+      architectural properties — not production afterthoughts.
     </p>
-    <h1>Jonatan Collante</h1>
-    <p style="max-width: var(--width-reading); color: var(--color-text-muted); font-size: var(--text-lg);">
-      Phase 3 checkpoint — shell (header, footer, containers) wired. Homepage assembly happens in Phase 6.
+    <p class="hero__domains">Databricks · Azure · Data Platforms · Agentic AI · Governance</p>
+    <a href="/architecture/" class="hero__cta">Explore architecture →</a>
+  </section>
+
+  {
+    flagshipArchitecture && (
+      <section class="selected-architecture container container--wide">
+        <p class="selected-architecture__eyebrow">Selected Architecture</p>
+        <h2>{flagshipArchitecture.data.title}</h2>
+        <p class="selected-architecture__description">{flagshipArchitecture.data.description}</p>
+        <Figure
+          caption={`${flagshipArchitecture.data.title} — reference architecture`}
+          description="Five-stage pipeline. Sources — operational systems, SaaS applications, and streaming events — flow into Ingestion, which handles batch and CDC/streaming patterns. Ingestion lands data in the Data Platform: a bronze, silver, gold lakehouse enclosed by a Unity Catalog governance boundary that enforces access control and lineage for everything inside it. The platform produces governed Data Products — curated datasets and feature sets — which are consumed by BI, ML/model serving, and agentic AI applications."
+          width="wide"
+        >
+          <EnterpriseDataAiPlatform />
+        </Figure>
+        <a href={`/architecture/${flagshipArchitecture.id}/`} class="selected-architecture__link">
+          Explore the architecture →
+        </a>
+      </section>
+    )
+  }
+
+  <section class="practice container container--standard">
+    <ol class="practice__list">
+      {
+        areasOfPractice.map((area) => (
+          <li class="practice__item">
+            <span class="practice__number">{area.number}</span>
+            <div>
+              <h2><a href={area.href}>{area.title}</a></h2>
+              <p>{area.description}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  {
+    decisionEntries.length > 0 && (
+      <section class="decisions container container--standard">
+        <p class="decisions__eyebrow">Selected Architecture Decisions</p>
+        <ul class="decisions__list">
+          {decisionEntries.map((entry) => (
+            <li class="decisions__item">
+              <p class="decisions__id">ADR·{pad(entry.data.decisionNumber)}</p>
+              <h3><a href={`/decisions/${entry.id}/`}>{entry.data.title}</a></h3>
+              <p class="decisions__description">{entry.data.description}</p>
+            </li>
+          ))}
+        </ul>
+        <a href="/decisions/" class="decisions__link">All decisions →</a>
+      </section>
+    )
+  }
+
+  {
+    insightEntries.length > 0 && (
+      <section class="insights container container--standard">
+        <p class="insights__eyebrow">Latest Insights</p>
+        <ul class="insights__list">
+          {insightEntries.map((entry) => (
+            <li class="insights__item">
+              <p class="insights__type">{entry.data.insightType}</p>
+              <h3><a href={`/insights/${entry.id}/`}>{entry.data.title}</a></h3>
+              <p class="insights__description">{entry.data.description}</p>
+              <div class="insights__meta">
+                <time datetime={entry.data.date.toISOString()}>
+                  {new Intl.DateTimeFormat("en-US", { year: "numeric", month: "long", day: "numeric" }).format(entry.data.date)}
+                </time>
+                <TagList patternTags={entry.data.patternTags} />
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="about-excerpt container container--standard">
+    <p class="about-excerpt__eyebrow">About</p>
+    <p class="about-excerpt__text">
+      {siteConfig.name} is a {siteConfig.role} working at the intersection of enterprise data platforms,
+      cloud architecture and AI. His focus is turning technically promising ideas into governed, operable
+      and production-ready systems.
     </p>
+    <a href="/about/" class="about-excerpt__link">About →</a>
   </section>
 </BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-10) var(--space-9);
+  }
+
+  .hero__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .hero h1 {
+    margin-top: var(--space-3);
+  }
+
+  .hero__thesis {
+    margin-top: var(--space-5);
+    max-width: var(--width-reading);
+    font-size: var(--text-xl);
+    line-height: var(--leading-body);
+    color: var(--color-text);
+  }
+
+  .hero__domains {
+    margin-top: var(--space-5);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .hero__cta {
+    display: inline-block;
+    margin-top: var(--space-6);
+    font-size: var(--text-base);
+    color: var(--color-accent);
+  }
+
+  .selected-architecture {
+    padding-block: var(--space-9);
+    border-top: var(--border-width) solid var(--color-line);
+  }
+
+  .selected-architecture__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+
+  .selected-architecture h2 {
+    margin-top: var(--space-3);
+  }
+
+  .selected-architecture__description {
+    margin-top: var(--space-3);
+    max-width: var(--width-reading);
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+
+  .selected-architecture__link {
+    display: inline-block;
+    margin-top: var(--space-2);
+    color: var(--color-accent);
+  }
+
+  .practice {
+    padding-block: var(--space-9);
+    border-top: var(--border-width) solid var(--color-line);
+  }
+
+  .practice__item {
+    display: grid;
+    grid-template-columns: 3rem 1fr;
+    gap: var(--space-5);
+    padding-block: var(--space-5);
+    border-top: var(--border-width) solid var(--color-line);
+  }
+
+  .practice__item:last-child {
+    border-bottom: var(--border-width) solid var(--color-line);
+  }
+
+  .practice__number {
+    font-family: var(--font-mono);
+    color: var(--color-text-muted);
+  }
+
+  .practice__item h2 {
+    font-size: var(--text-xl);
+    font-weight: 500;
+  }
+
+  .practice__item h2 a:hover {
+    color: var(--color-accent);
+  }
+
+  .practice__item p {
+    margin-top: var(--space-2);
+    color: var(--color-text-muted);
+  }
+
+  .decisions,
+  .insights {
+    padding-block: var(--space-9);
+    border-top: var(--border-width) solid var(--color-line);
+  }
+
+  .decisions__eyebrow,
+  .insights__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+
+  .decisions__list,
+  .insights__list {
+    margin-top: var(--space-6);
+  }
+
+  .decisions__item,
+  .insights__item {
+    padding-block: var(--space-5);
+    border-top: var(--border-width) solid var(--color-line);
+  }
+
+  .decisions__list li:last-child,
+  .insights__list li:last-child {
+    border-bottom: var(--border-width) solid var(--color-line);
+  }
+
+  .decisions__id,
+  .insights__type {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .decisions__item h3,
+  .insights__item h3 {
+    margin-top: var(--space-2);
+    font-size: var(--text-xl);
+    font-weight: 500;
+  }
+
+  .decisions__item h3 a:hover,
+  .insights__item h3 a:hover {
+    color: var(--color-accent);
+  }
+
+  .decisions__description,
+  .insights__description {
+    margin-top: var(--space-2);
+    color: var(--color-text-muted);
+    max-width: var(--width-reading);
+  }
+
+  .insights__meta {
+    margin-top: var(--space-3);
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .insights__meta time {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .decisions__link {
+    display: inline-block;
+    margin-top: var(--space-5);
+    color: var(--color-accent);
+    font-size: var(--text-sm);
+  }
+
+  .about-excerpt {
+    padding-block: var(--space-9);
+    border-top: var(--border-width) solid var(--color-line);
+  }
+
+  .about-excerpt__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+
+  .about-excerpt__text {
+    margin-top: var(--space-4);
+    max-width: var(--width-reading);
+    font-size: var(--text-lg);
+    line-height: var(--leading-body);
+  }
+
+  .about-excerpt__link {
+    display: inline-block;
+    margin-top: var(--space-4);
+    color: var(--color-accent);
+  }
+</style>

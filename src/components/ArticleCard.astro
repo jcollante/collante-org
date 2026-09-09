@@ -1,0 +1,75 @@
+---
+import TagList from "./TagList.astro";
+
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  date: Date;
+  eyebrow?: string;
+  patternTags?: string[];
+  stackTags?: string[];
+}
+
+const { href, title, description, date, eyebrow, patternTags = [], stackTags = [] } = Astro.props;
+const dateFormatter = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "long", day: "numeric" });
+---
+
+<li class="article-card">
+  {eyebrow && <p class="article-card__eyebrow">{eyebrow}</p>}
+  <h2 class="article-card__title"><a href={href}>{title}</a></h2>
+  <p class="article-card__description">{description}</p>
+  <div class="article-card__meta">
+    <time datetime={date.toISOString()}>{dateFormatter.format(date)}</time>
+    <TagList patternTags={patternTags} stackTags={stackTags} />
+  </div>
+</li>
+
+<style>
+  .article-card {
+    padding-block: var(--space-6);
+    border-top: var(--border-width) solid var(--color-line);
+  }
+
+  .article-card:last-child {
+    border-bottom: var(--border-width) solid var(--color-line);
+  }
+
+  .article-card__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .article-card__title {
+    margin-top: var(--space-2);
+    font-size: var(--text-xl);
+    font-weight: 500;
+  }
+
+  .article-card__title a:hover {
+    color: var(--color-accent);
+  }
+
+  .article-card__description {
+    margin-top: var(--space-2);
+    color: var(--color-text-muted);
+    max-width: var(--width-reading);
+  }
+
+  .article-card__meta {
+    margin-top: var(--space-4);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .article-card__meta time {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+</style>

@@ -1,0 +1,121 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import TagList from "../../components/TagList.astro";
+import { isListable } from "../../lib/content";
+
+const entries = (await getCollection("decisions"))
+  .filter(isListable)
+  .sort((a, b) => b.data.decisionNumber - a.data.decisionNumber);
+
+function pad(n: number): string {
+  return String(n).padStart(3, "0");
+}
+---
+
+<BaseLayout
+  title="Decisions — collante.ai"
+  description="Architecture Decision Records — the trade-offs behind enterprise Data & AI platform decisions, including what I'd reconsider."
+  width="standard"
+>
+  <div class="listing">
+    <p class="listing__eyebrow">Decisions</p>
+    <h1>Architecture Decision Records</h1>
+    <p class="listing__intro">
+      Decisions with genuine trade-offs on the record — including what I'd reconsider, not just a one-sided
+      recommendation.
+    </p>
+
+    <ol class="decisions-list">
+      {
+        entries.map((entry) => (
+          <li class="decisions-list__item">
+            <p class="decisions-list__id">
+              ADR·{pad(entry.data.decisionNumber)}
+              <span class={`decisions-list__status decisions-list__status--${entry.data.decisionStatus}`}>
+                {entry.data.decisionStatus}
+              </span>
+            </p>
+            <h2><a href={`/decisions/${entry.id}/`}>{entry.data.title}</a></h2>
+            <p class="decisions-list__description">{entry.data.description}</p>
+            <TagList patternTags={entry.data.patternTags} stackTags={entry.data.stackTags} />
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</BaseLayout>
+
+<style>
+  .listing {
+    padding-block: var(--space-8) var(--space-9);
+  }
+
+  .listing__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+
+  .listing__intro {
+    margin-top: var(--space-4);
+    max-width: var(--width-reading);
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+
+  .decisions-list {
+    margin-top: var(--space-8);
+  }
+
+  .decisions-list__item {
+    padding-block: var(--space-6);
+    border-top: var(--border-width) solid var(--color-line);
+  }
+
+  .decisions-list__item:last-child {
+    border-bottom: var(--border-width) solid var(--color-line);
+  }
+
+  .decisions-list__id {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+
+  .decisions-list__status {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    letter-spacing: 0.03em;
+  }
+
+  .decisions-list__status--superseded,
+  .decisions-list__status--deprecated {
+    opacity: 0.7;
+  }
+
+  .decisions-list__item h2 {
+    margin-top: var(--space-2);
+    font-size: var(--text-xl);
+    font-weight: 500;
+  }
+
+  .decisions-list__item h2 a:hover {
+    color: var(--color-accent);
+  }
+
+  .decisions-list__description {
+    margin-top: var(--space-2);
+    color: var(--color-text-muted);
+    max-width: var(--width-reading);
+  }
+
+  .decisions-list__item :global(.tag-list) {
+    margin-top: var(--space-3);
+  }
+</style>

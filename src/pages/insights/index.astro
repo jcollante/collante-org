@@ -1,0 +1,62 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArticleCard from "../../components/ArticleCard.astro";
+import { isListable, sortByDateDesc } from "../../lib/content";
+
+const entries = sortByDateDesc((await getCollection("insights")).filter(isListable));
+---
+
+<BaseLayout
+  title="Insights — collante.ai"
+  description="Long-form architectural analysis and technical perspectives on enterprise Data & AI platforms."
+  width="standard"
+>
+  <div class="listing">
+    <p class="listing__eyebrow">Insights</p>
+    <h1>Insights</h1>
+    <p class="listing__intro">
+      Architectural analysis and perspective — the reasoning behind a position, not just the position.
+    </p>
+
+    <ul class="listing__list">
+      {
+        entries.map((entry) => (
+          <ArticleCard
+            href={`/insights/${entry.id}/`}
+            title={entry.data.title}
+            description={entry.data.description}
+            date={entry.data.date}
+            eyebrow={entry.data.insightType}
+            patternTags={entry.data.patternTags}
+            stackTags={entry.data.stackTags}
+          />
+        ))
+      }
+    </ul>
+  </div>
+</BaseLayout>
+
+<style>
+  .listing {
+    padding-block: var(--space-8) var(--space-9);
+  }
+
+  .listing__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+
+  .listing__intro {
+    margin-top: var(--space-4);
+    max-width: var(--width-reading);
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+
+  .listing__list {
+    margin-top: var(--space-8);
+  }
+</style>
