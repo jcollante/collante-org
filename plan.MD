@@ -162,11 +162,10 @@ Do the phases roughly in order. Phase 12 (writing the actual launch content) is 
 
 **Goal:** `collante.ai` resolves to the built site with no manual steps after `git push`.
 
-- [ ] Connect the GitHub repo to Cloudflare Pages, framework preset "Astro."
-- [ ] Add `public/_headers` with CSP, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`.
-- [ ] Point the domain's DNS at Cloudflare Pages, enable HSTS and DNSSEC.
-- [ ] Enable Cloudflare Web Analytics (the JS snippet or the Cloudflare-native option with no client-side script, if available on your plan).
-- [ ] Do a full production build locally (`npm run build && npm run preview`) and click through every page before the first real deploy.
+- [x] Added `public/_headers`: CSP (`script-src 'self'` — no inline/unsafe-inline needed since there's zero executable client JS anywhere on the site yet; `style-src 'self' 'unsafe-inline'` since Astro's scoped component styles emit inline `<style>` tags; `frame-ancestors 'none'`, `object-src 'none'`, `upgrade-insecure-requests`), `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`. **Note for whoever enables Cloudflare Web Analytics later**: if using the JS-snippet option (not the scriptless one), `script-src` (and likely `connect-src`) will need `https://static.cloudflareinsights.com` added, or the analytics script gets silently blocked.
+- [x] Added `.node-version` (pinned to Node 24) so Cloudflare Pages' build environment matches what this whole build was actually tested against — `scripts/render-mermaid.ts` is invoked as a plain `node` script (not through Vite/esbuild) and needs Node's native TypeScript stripping (reliable from ~22.6+); CI's workflow now reads the same file as its single source of truth.
+- [x] Did a full production build + preview locally and **crawled the entire site programmatically** (from the homepage, following only real rendered links) instead of manually clicking through — 25/25 pages reachable, zero broken internal links, zero broken asset requests.
+- [ ] **Needs you** — connecting the GitHub repo to Cloudflare Pages, pointing DNS at it, enabling HSTS/DNSSEC, and turning on Web Analytics all require your actual GitHub/Cloudflare/registrar accounts, which I don't have access to. Everything that could be prepared as files ahead of that (headers, Node pinning, CI) is done — ready for you to connect. Framework preset in Cloudflare Pages: "Astro" (build command `npm run build`, output directory `dist`).
 
 **Definition of done:** pushing to `main` produces a live deployment at `collante.ai` within a few minutes, with correct security headers (check via `curl -I` or an online header checker) and analytics recording a real pageview.
 
