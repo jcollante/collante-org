@@ -1,5 +1,5 @@
 {
-  "name": "shaggy-star",
+  "name": "collanteai",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -12,9 +12,20 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^7.3.2"
+    "@astrojs/markdown-satteri": "^0.4.1",
+    "@astrojs/mdx": "^8.0.1",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.3.2",
+    "mermaid": "^11.17.2",
+    "shiki": "^4.4.3",
+    "zod": "^4.5.4"
   },
   "allowScripts": {
     "esbuild": true
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "playwright": "^1.63.0"
   }
 }
