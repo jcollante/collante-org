@@ -47,10 +47,11 @@ Do the phases roughly in order. Phase 12 (writing the actual launch content) is 
 
 **Goal:** typed, validated content model with the `decisions`/`insights` split.
 
-- [ ] Check the installed Astro version's current content API (Content Layer vs. legacy Content Collections) — use whichever is current and stable, not whichever this plan assumes.
-- [ ] Create `src/content/config.ts` with the five collections (`architecture`, `accelerators`, `decisions`, `insights`, `lab`) and the Zod schemas from the build prompt.
-- [ ] Create one placeholder entry in each collection folder with real (if minimal) frontmatter, so schema errors surface immediately rather than on the first real article.
-- [ ] Run the Astro type-check / build and confirm a deliberately broken frontmatter field (e.g., invalid `patternTag`) fails the build with a clear error.
+- [x] Check the installed Astro version's current content API (Content Layer vs. legacy Content Collections) — use whichever is current and stable, not whichever this plan assumes. (Astro 7.3 — Content Layer API, `glob()` loaders, config at `src/content.config.ts` per the build spec's repo structure.)
+- [x] Create `src/content.config.ts` with the five collections (`architecture`, `accelerators`, `decisions`, `insights`, `lab`) and the Zod schemas from the build spec.
+- [x] Create one real (if concise, layout-validation-purpose) sample entry in each collection folder, using the exact filenames from the build spec's §42: `enterprise-data-ai-platform.mdx`, `databricks-production-readiness.mdx`, `adr-001-single-vs-multi-agent.mdx`, `governance-as-architecture.mdx`, `private-hybrid-ai-development.mdx`. Generic/public-knowledge content only, no fabricated client claims.
+- [x] Run the Astro build and confirm a deliberately broken frontmatter field (invalid `patternTag`) fails the build with a clear error — confirmed (`InvalidContentEntryDataError`), then reverted.
+- [x] Added `src/lib/content.ts` centralizing draft/archive listing rules (build spec §14) — `isListable`, `isBuildable`, `sortByDateDesc`, shared by every future listing/route.
 
 **Definition of done:** `npm run build` succeeds with five valid placeholder entries, and fails loudly when you temporarily break one on purpose (then fix it back).
 

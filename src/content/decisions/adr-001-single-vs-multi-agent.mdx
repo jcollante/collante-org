@@ -1,0 +1,50 @@
+---
+title: "Single-Agent vs Multi-Agent Architecture"
+description: "When does additional agent autonomy create value, and when does it just create another governance boundary to operate?"
+date: 2026-07-20
+status: published
+featured: true
+decisionNumber: 1
+decisionStatus: accepted
+patternTags: [agentic-ai, agentic-orchestration]
+stackTags: [technology-agnostic]
+context: "Enterprise teams building agentic AI capabilities default to multi-agent designs earlier than the task complexity justifies, adding coordination overhead before the platform has the observability and governance maturity to operate it safely."
+options:
+  - "Single agent with tool access — one orchestration loop, a bounded tool set, and a single point of control and audit."
+  - "Multi-agent with a supervisor pattern — a coordinating agent delegates to specialized sub-agents, each with a narrower tool set and role."
+recommendation: "Default to a single agent with tool access. Move to multi-agent only when a specific task genuinely requires role separation the single agent cannot express, and only once the platform has the observability to trace decisions across agent boundaries."
+---
+
+## Decision
+
+Should a new agentic AI capability be built as one agent with a broad tool set, or decomposed into multiple specialized agents coordinated by a supervisor?
+
+## Options considered
+
+**Single agent with tool access.** One orchestration loop, a bounded set of tools, one place to log, trace, and rate-limit. Reasoning failures are visible in a single transcript.
+
+**Multi-agent with a supervisor pattern.** A coordinating agent delegates to specialized sub-agents — for example a retrieval agent, an analysis agent, and a writing agent — each scoped to a narrower role and tool set.
+
+## Trade-offs
+
+Multi-agent designs are attractive because role separation *looks* like it maps cleanly onto how a human team would divide the work. In practice, that mapping introduces a coordination problem that didn't exist before: agent-to-agent handoffs need their own error handling, the supervisor's routing logic becomes a second place reasoning can fail, and tracing a bad outcome now means correlating transcripts across agent boundaries instead of reading one.
+
+Single-agent designs hit a real ceiling once a task genuinely requires holding several distinct roles' worth of context and constraints at once — at that point, cramming everything into one system prompt degrades reasoning quality more than the coordination overhead of splitting it would cost.
+
+## Recommendation
+
+Default to a single agent with tool access. It is simpler to build, monitor, and govern, and covers the large majority of enterprise agentic use cases — most of which are a bounded task with a handful of tools, not an open-ended multi-role workflow.
+
+Move to multi-agent only when a task has genuinely independent sub-roles with conflicting context or constraints — for example, a retrieval role that needs broad read access and a customer-facing writing role that must not see raw retrieval output. Even then, keep the number of agents as small as the role separation actually requires; a three-agent system is not inherently more capable than a well-scoped single agent, only harder to operate.
+
+## Consequences
+
+Choosing single-agent by default means some future capabilities will need a deliberate re-architecture to multi-agent once complexity crosses the threshold. That is an acceptable cost: it is cheaper to split an agent later than to operate unnecessary coordination overhead from day one.
+
+## What I'd reconsider
+
+If tracing and evaluation tooling for multi-agent systems matures to the point where cross-agent observability is no harder than single-agent observability, the case for defaulting to single-agent weakens — a meaningful share of the cost being avoided here is operational, not architectural. I'd also reconsider this for teams that already operate a mature multi-agent orchestration platform, where the marginal cost of one more agent is genuinely low.
+
+## Related architecture
+
+See [Enterprise Data & AI Platform](/architecture/enterprise-data-ai-platform/) for how agentic workloads consume governed data products from the underlying platform.

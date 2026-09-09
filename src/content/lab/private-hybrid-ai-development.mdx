@@ -1,0 +1,33 @@
+---
+title: "Private Hybrid AI Development"
+description: "Local models for private development with controlled escalation to external frontier models when local capability isn't enough."
+date: 2026-08-20
+status: published
+featured: true
+experimentStatus: experimental
+patternTags: [agentic-ai, security, observability]
+stackTags: [open-source, technology-agnostic]
+---
+
+## Idea
+
+Development workflows that involve sensitive code or data increasingly want AI assistance without sending that context to an external model provider by default. This experiment explores a hybrid pattern: a local, self-hosted model handles the majority of development assistance, with a deliberate, logged escalation path to a larger external frontier model for tasks the local model genuinely can't handle well.
+
+## Why not just pick one
+
+An all-local setup avoids the data exposure question entirely but caps capability at whatever fits comfortably on local hardware — noticeably behind frontier models on complex reasoning and long-context tasks. An all-external setup gets full capability but means every prompt, including ones touching sensitive code, leaves the local environment by default. Neither extreme is satisfying for the kind of work this is meant to support.
+
+## Approach
+
+- Route requests to a local model by default.
+- Define escalation criteria explicitly — task type, context sensitivity, and a confidence signal from the local model — rather than leaving the choice to the developer in the moment.
+- Log every escalation: what was sent, to which provider, and why, so the escalation path is auditable rather than ambient.
+- Treat the external model as a capability of last resort, not a fallback used out of convenience.
+
+## Status
+
+Experimental. The routing and escalation-logging piece works; the harder open question is what a good confidence signal for "the local model shouldn't attempt this" actually looks like in practice, versus something that either escalates too eagerly or not eagerly enough.
+
+## Why this matters for the platform work
+
+This is the same governance-boundary question that shows up in [Governance as Architecture, Not Afterthought](/insights/governance-as-architecture/), applied to a development workflow instead of a data platform: rather than trusting every individual decision about what leaves the boundary, put the boundary in the architecture and make crossing it a logged, deliberate act.

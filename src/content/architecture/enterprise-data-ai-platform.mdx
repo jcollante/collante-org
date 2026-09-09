@@ -1,0 +1,41 @@
+---
+title: "Enterprise Data & AI Platform"
+description: "A reference architecture for governed, scalable and production-ready Data & AI capabilities on Databricks and Azure."
+date: 2026-06-15
+status: published
+featured: true
+architectureType: reference
+patternTags: [platform-architecture, lakehouse-governance, data-governance]
+stackTags: [databricks, azure]
+audience: ["Data & AI architects", "Platform engineering leads", "Heads of Data"]
+---
+
+## Context
+
+Most enterprise data platforms accumulate capability faster than they accumulate governance. Ingestion, transformation, serving, and increasingly AI inference get bolted on in the order the business asked for them, not in an order that keeps the platform operable. The result is a system that works in the demo and degrades under real multi-tenant load, unclear ownership, and audit pressure.
+
+This reference architecture treats governance, reliability, and operability as architectural properties of the platform — decided up front, not retrofitted once something breaks in production.
+
+## Layers
+
+**Sources.** Operational systems, SaaS applications, streaming events, and external data feeds. Ownership and change-data-capture strategy are decided per source, not platform-wide.
+
+**Ingestion.** A small set of standardized ingestion patterns — batch, CDC, and streaming — rather than a bespoke pipeline per source. Consistency here is what makes lineage and monitoring tractable later.
+
+**Data Platform.** A lakehouse organized into bronze/silver/gold layers, with Unity Catalog (or an equivalent catalog) providing a single governance boundary across data, tables, and models. Access control, lineage, and data quality checks are enforced at this layer, not left to downstream consumers to reimplement.
+
+**Data Products.** Curated, contract-bound datasets and feature sets exposed to analytics, ML, and agentic AI workloads. A data product has an owner, a schema contract, and a freshness SLA — without these three, it is not a product, it is a table someone happens to query.
+
+**Consumption.** BI, ML training and serving, and agentic AI applications sit on top of data products, not directly on raw or silver data. This boundary is what keeps a schema change three layers down from silently breaking a production agent.
+
+## The governance boundary
+
+The architectural decision that matters most here is *where* governance is enforced. Enforcing it once, at the catalog layer, is what allows every layer above it — BI tool, notebook, model endpoint, agent — to inherit access control and lineage instead of re-implementing it. Pushing governance decisions downstream into individual consumers is the single most common cause of platforms that pass their PoC and fail their audit.
+
+## Trade-offs
+
+Centralizing governance at the catalog layer adds a coordination cost: teams can no longer stand up a dataset without going through catalog registration. That friction is deliberate — it is cheaper to pay upfront than to pay later in incident response and access re-certification.
+
+## Related decisions
+
+See [ADR·001 — Single-Agent vs Multi-Agent Architecture](/decisions/adr-001-single-vs-multi-agent/) for how agentic AI workloads consume this platform's data products.

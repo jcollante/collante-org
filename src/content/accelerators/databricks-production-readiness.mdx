@@ -1,0 +1,48 @@
+---
+title: "Databricks Production Readiness Accelerator"
+description: "A maturity framework for moving Databricks initiatives from proof-of-concept to governed production operation."
+date: 2026-07-01
+status: published
+featured: true
+patternTags: [platform-engineering, data-governance, finops]
+stackTags: [databricks, azure]
+maturityDimensions: [governance, automation, observability, security, operability, cost]
+architectureDomains: ["Unity Catalog governance", "CI/CD for data & ML", "Workspace and cluster policy", "Cost visibility and chargeback"]
+---
+
+## Problem
+
+A Databricks proof-of-concept and a Databricks production platform are built from the same primitives but operate under different rules. Most stalled rollouts fail not because the technology can't scale, but because nobody decided, before the PoC succeeded, what "production" was going to require of governance, automation, and cost control.
+
+## Target audience
+
+Platform and data engineering teams that have a working Databricks PoC and a mandate to take it enterprise-wide, and the architects and platform leads accountable for what that expansion costs to operate.
+
+## Assessment framework
+
+The accelerator scores a platform across six maturity dimensions — governance, automation, observability, security, operability, and cost — on a simple four-stage scale: ad hoc, managed, standardized, and optimized. The scoring is deliberately coarse; the value is in identifying which dimension is weakest, not in producing a precise number.
+
+| Dimension | Ad hoc | Managed | Standardized | Optimized |
+|---|---|---|---|---|
+| Governance | No catalog | Catalog exists, inconsistently used | Unity Catalog enforced platform-wide | Automated access certification |
+| Automation | Manual notebook runs | Scheduled jobs | CI/CD for pipelines and models | Full GitOps, environment promotion |
+| Observability | No monitoring | Job-level alerts | Pipeline + data quality monitoring | SLA-driven dashboards |
+| Security | Shared credentials | Per-workspace policy | Centralized identity, network isolation | Continuous policy-as-code enforcement |
+| Operability | Tribal knowledge | Runbooks exist | On-call rotation, defined SLAs | Self-service platform with guardrails |
+| Cost | No visibility | Monthly billing review | Per-team chargeback | Automated budget policy enforcement |
+
+## Architecture
+
+The accelerator assumes the reference platform architecture in [Enterprise Data & AI Platform](/architecture/enterprise-data-ai-platform/) and focuses specifically on the operational scaffolding around it: workspace topology (dev/test/prod separation), cluster policies, job orchestration, and the Unity Catalog structure that makes governance enforceable rather than aspirational.
+
+## Outputs
+
+- A scored maturity assessment across the six dimensions.
+- A prioritized backlog — typically the two or three weakest dimensions, not all six at once.
+- A target-state architecture diagram showing workspace, catalog, and CI/CD topology.
+
+## Adoption path
+
+Start with governance and security — they are the dimensions hardest to retrofit once workloads are live. Automation and observability follow naturally once there is a stable catalog boundary to automate around. Cost visibility is deliberately last: it's most useful once there is enough platform structure for the numbers to mean something.
+
+This accelerator describes a generic, independently developed framework and is not tied to any specific client engagement or employer methodology.

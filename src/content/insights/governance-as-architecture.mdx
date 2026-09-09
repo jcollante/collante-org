@@ -1,0 +1,40 @@
+---
+title: "Governance as Architecture, Not Afterthought"
+description: "Treating governance as a property decided at design time, not a control layer bolted on once a platform is already in production."
+date: 2026-08-05
+status: published
+featured: true
+insightType: perspective
+patternTags: [data-governance, lakehouse-governance, platform-architecture]
+stackTags: [technology-agnostic]
+---
+
+Governance usually enters an enterprise data platform the same way: late, and as a response to an incident. A regulator asks for lineage the platform can't produce. An access review turns up a service principal with more scope than anyone can explain. A model gets deployed on a dataset nobody formally owns. At that point, governance is retrofitted — a review board, a tagging exercise, a wave of access re-certifications — and it is expensive precisely because it is happening after the architecture already exists.
+
+The alternative is to treat governance as an architectural property, decided at the same time as the platform's layering, not layered on top of it once the layering is already fixed.
+
+## What "architectural" means here
+
+A property is architectural when it constrains the structure of the system, not just its operating procedures. Encryption at rest is architectural: it changes what components exist and how they're wired. A quarterly access-review meeting is not architectural: it's a process that compensates for an architecture that doesn't enforce access boundaries on its own.
+
+Applied to governance, this means the question isn't "what process do we run to catch governance violations," it's "what architectural boundary makes the violation impossible, or at least immediately visible, by construction."
+
+## Where the boundary belongs
+
+In most lakehouse architectures, there is exactly one place where this boundary can live cheaply: the catalog layer. A catalog that enforces access control, captures lineage automatically, and requires every table and model to have a registered owner turns governance from a process every consumer has to separately implement into a property every consumer inherits for free.
+
+Push that boundary downstream — into individual BI tools, notebooks, or model-serving endpoints — and you get exactly what most platforms have today: governance that's real in the places someone remembered to implement it, and absent everywhere else. The inconsistency, not the absence, is what fails the audit.
+
+## The cost is real, and it's not the point
+
+Enforcing governance at a single boundary has a real cost: nothing gets access to raw data without going through catalog registration first, which means teams cannot move as fast in the platform's early weeks as they could with an unmanaged data lake. That friction is not a bug to be optimized away. It is the price of the platform being auditable on day 200 instead of only auditable after an expensive retrofit.
+
+## Implications
+
+- Decide the governance boundary during the platform's initial architecture phase, not after the first production incident.
+- Prefer one enforced boundary over many advisory ones — a catalog that *requires* registration beats a wiki page that recommends it.
+- Expect friction early. If governance isn't costing anyone anything up front, it probably isn't enforced anywhere yet.
+
+## Related
+
+See [Enterprise Data & AI Platform](/architecture/enterprise-data-ai-platform/) for where this boundary sits in a full reference architecture, and the [Databricks Production Readiness Accelerator](/accelerators/databricks-production-readiness/) for a maturity model that treats governance as the first dimension to fix, not the last.
