@@ -47,7 +47,7 @@ const areasOfPractice = [
     <script type="application/ld+json" is:inline set:html={JSON.stringify(personJsonLd())} />
   </Fragment>
 
-  <section class="hero container container--standard">
+  <section class="hero container container--wide">
     <p class="hero__eyebrow">Data &amp; AI Architect</p>
     <h1>{siteConfig.name}</h1>
     <p class="hero__thesis">
@@ -78,7 +78,7 @@ const areasOfPractice = [
     )
   }
 
-  <section class="practice container container--standard">
+  <section class="practice container container--wide">
     <ol class="practice__list">
       {
         areasOfPractice.map((area) => (
@@ -96,7 +96,7 @@ const areasOfPractice = [
 
   {
     decisionEntries.length > 0 && (
-      <section class="decisions container container--standard">
+      <section class="decisions container container--wide">
         <p class="decisions__eyebrow">Selected Architecture Decisions</p>
         <ul class="decisions__list">
           {decisionEntries.map((entry) => (
@@ -114,7 +114,7 @@ const areasOfPractice = [
 
   {
     insightEntries.length > 0 && (
-      <section class="insights container container--standard">
+      <section class="insights container container--wide">
         <p class="insights__eyebrow">Latest Insights</p>
         <ul class="insights__list">
           {insightEntries.map((entry) => (
@@ -135,7 +135,7 @@ const areasOfPractice = [
     )
   }
 
-  <section class="about-excerpt container container--standard">
+  <section class="about-excerpt container container--wide">
     <p class="about-excerpt__eyebrow">About</p>
     <p class="about-excerpt__text">
       {siteConfig.name} is a {siteConfig.role} working at the intersection of enterprise data platforms,
@@ -212,8 +212,12 @@ const areasOfPractice = [
   }
 
   .practice {
-    padding-block: var(--space-9);
+    padding-block: var(--space-8);
     border-top: var(--border-width) solid var(--color-line);
+  }
+
+  .practice__list {
+    max-width: var(--width-standard);
   }
 
   .practice__item {
@@ -230,7 +234,7 @@ const areasOfPractice = [
 
   .practice__number {
     font-family: var(--font-mono);
-    color: var(--color-text-muted);
+    color: var(--color-accent);
   }
 
   .practice__item h2 {
@@ -249,7 +253,7 @@ const areasOfPractice = [
 
   .decisions,
   .insights {
-    padding-block: var(--space-9);
+    padding-block: var(--space-8);
     border-top: var(--border-width) solid var(--color-line);
   }
 
@@ -264,6 +268,7 @@ const areasOfPractice = [
   .decisions__list,
   .insights__list {
     margin-top: var(--space-6);
+    max-width: var(--width-standard);
   }
 
   .decisions__item,
@@ -281,7 +286,7 @@ const areasOfPractice = [
   .insights__type {
     font-family: var(--font-mono);
     font-size: var(--text-xs);
-    color: var(--color-text-muted);
+    color: var(--color-accent);
     text-transform: uppercase;
     letter-spacing: 0.03em;
   }
@@ -325,7 +330,7 @@ const areasOfPractice = [
   }
 
   .about-excerpt {
-    padding-block: var(--space-9);
+    padding-block: var(--space-8);
     border-top: var(--border-width) solid var(--color-line);
   }
 
