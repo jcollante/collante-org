@@ -7,9 +7,10 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/render-mermaid.ts && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "render:diagrams": "node scripts/render-mermaid.ts"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.1",

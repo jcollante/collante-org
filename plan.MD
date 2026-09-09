@@ -80,11 +80,11 @@ Do the phases roughly in order. Phase 12 (writing the actual launch content) is 
 
 **Goal:** the three-tier diagram pipeline (custom SVG / Mermaid-at-build / HTML-CSS) with accessibility baked in.
 
-- [ ] Build `Figure.astro`: accepts a caption, wraps children in `<figure>`, renders `role="img"` + `<title>`/`<desc>` when the child is SVG, optional slot for a "detailed text description" link.
-- [ ] Write `scripts/render-mermaid.ts`: reads `.mmd` source files (or Mermaid code blocks in MDX via a remark plugin), renders to static SVG at build time using the theme values from `design-tokens.json`, outputs to `public/diagrams/`.
-- [ ] Hand-author one flagship SVG diagram (the homepage "Enterprise Data & AI Platform" reference architecture) directly, styled from the same tokens.
-- [ ] Build one example decision matrix as semantic HTML/CSS (a real `<table>` or CSS grid, not a diagram) to prove tier three works.
-- [ ] Test all three diagram types with a screen reader (VoiceOver/NVDA) to confirm the caption and description are actually announced.
+- [x] Build `Figure.astro`: accepts a caption, wraps children in `<figure>`. `variant="diagram"` (default) wraps content in a `role="img"` div carrying the accessible name (`aria-label`) and, when a `description` is given, an `aria-describedby` link to a `<details>` "Detailed description" disclosure. `variant="table"` skips the role="img" wrapper entirely — a semantic `<table>` keeps its own table semantics, never flattened into "image" (per build spec §32).
+- [x] Write `scripts/render-mermaid.ts`: reads `.mmd` sources from `src/diagrams/`, renders to static SVG at build time by driving the real `mermaid` package inside a headless Playwright page (mermaid needs a DOM; this avoids adding `@mermaid-js/mermaid-cli`/puppeteer as a new dependency since `mermaid` + `playwright` are already in the approved stack), outputs to `public/diagrams/`. Wired into `npm run build` as a prebuild step; theme colors hand-transcribed from `tokens.css` with a comment to keep them in sync.
+- [x] Hand-authored the flagship SVG diagram (`EnterpriseDataAiPlatform.astro`) directly as inline SVG — Sources → Ingestion → Data Platform (Unity Catalog governance boundary, accent-colored per spec §29) → Data Products → Consumption. `role="presentation"` on the SVG itself since the parent Figure's wrapper div owns the single accessible name (avoids a double/competing accessible name).
+- [x] Built one example decision matrix as a real semantic `<table>` (ADR·001, single-agent vs. multi-agent by criterion), wrapped in `Figure` with `variant="table"`.
+- [x] Verified all three tiers with axe (0 violations attributable to the diagrams/tables; the one flagged issue was a test-harness artifact — a scratch page with no `<h1>` — unrelated to the diagram system) and confirmed programmatically that each diagram exposes a distinct `role="img"` + `aria-label` while the table keeps native table semantics with no `role="img"` wrapper. (Manual VoiceOver/NVDA spot-check deferred to Phase 10's full screen-reader pass, once real article pages exist in Phase 5 to test against.)
 
 **Definition of done:** one working example of each of the three diagram tiers exists in the codebase, all wrapped in `Figure.astro`, all passing an axe accessibility check.
 

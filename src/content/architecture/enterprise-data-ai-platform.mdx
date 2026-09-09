@@ -10,11 +10,22 @@ stackTags: [databricks, azure]
 audience: ["Data & AI architects", "Platform engineering leads", "Heads of Data"]
 ---
 
+import Figure from "../../components/Figure.astro";
+import EnterpriseDataAiPlatform from "../../components/diagrams/EnterpriseDataAiPlatform.astro";
+
 ## Context
 
 Most enterprise data platforms accumulate capability faster than they accumulate governance. Ingestion, transformation, serving, and increasingly AI inference get bolted on in the order the business asked for them, not in an order that keeps the platform operable. The result is a system that works in the demo and degrades under real multi-tenant load, unclear ownership, and audit pressure.
 
 This reference architecture treats governance, reliability, and operability as architectural properties of the platform — decided up front, not retrofitted once something breaks in production.
+
+<Figure
+  caption="Enterprise Data & AI Platform — reference architecture"
+  description="Five-stage pipeline. Sources — operational systems, SaaS applications, and streaming events — flow into Ingestion, which handles batch and CDC/streaming patterns. Ingestion lands data in the Data Platform: a bronze, silver, gold lakehouse enclosed by a Unity Catalog governance boundary that enforces access control and lineage for everything inside it. The platform produces governed Data Products — curated datasets and feature sets — which are consumed by BI, ML/model serving, and agentic AI applications."
+  width="wide"
+>
+  <EnterpriseDataAiPlatform />
+</Figure>
 
 ## Layers
 

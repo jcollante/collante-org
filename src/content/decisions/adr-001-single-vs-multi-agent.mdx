@@ -15,6 +15,8 @@ options:
 recommendation: "Default to a single agent with tool access. Move to multi-agent only when a specific task genuinely requires role separation the single agent cannot express, and only once the platform has the observability to trace decisions across agent boundaries."
 ---
 
+import Figure from "../../components/Figure.astro";
+
 ## Decision
 
 Should a new agentic AI capability be built as one agent with a broad tool set, or decomposed into multiple specialized agents coordinated by a supervisor?
@@ -30,6 +32,46 @@ Should a new agentic AI capability be built as one agent with a broad tool set, 
 Multi-agent designs are attractive because role separation *looks* like it maps cleanly onto how a human team would divide the work. In practice, that mapping introduces a coordination problem that didn't exist before: agent-to-agent handoffs need their own error handling, the supervisor's routing logic becomes a second place reasoning can fail, and tracing a bad outcome now means correlating transcripts across agent boundaries instead of reading one.
 
 Single-agent designs hit a real ceiling once a task genuinely requires holding several distinct roles' worth of context and constraints at once — at that point, cramming everything into one system prompt degrades reasoning quality more than the coordination overhead of splitting it would cost.
+
+<Figure caption="Single-agent vs. multi-agent, by decision criterion" width="standard" variant="table">
+  <table>
+    <caption class="visually-hidden">Comparison of single-agent and multi-agent architectures across five decision criteria</caption>
+    <thead>
+      <tr>
+        <th scope="col">Criterion</th>
+        <th scope="col">Single agent</th>
+        <th scope="col">Multi-agent</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Coordination overhead</th>
+        <td>None — one loop</td>
+        <td>Real — supervisor routing can itself fail</td>
+      </tr>
+      <tr>
+        <th scope="row">Observability</th>
+        <td>One transcript to trace</td>
+        <td>Requires cross-agent correlation</td>
+      </tr>
+      <tr>
+        <th scope="row">Failure isolation</th>
+        <td>Low — one context, one failure surface</td>
+        <td>Higher — a sub-agent can fail in isolation</td>
+      </tr>
+      <tr>
+        <th scope="row">Operational complexity</th>
+        <td>Low</td>
+        <td>Higher — more moving parts to govern</td>
+      </tr>
+      <tr>
+        <th scope="row">Fit for genuinely independent roles</th>
+        <td>Degrades under role overload</td>
+        <td>Strong — roles get dedicated context</td>
+      </tr>
+    </tbody>
+  </table>
+</Figure>
 
 ## Recommendation
 

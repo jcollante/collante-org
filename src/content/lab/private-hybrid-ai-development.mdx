@@ -9,6 +9,8 @@ patternTags: [agentic-ai, security, observability]
 stackTags: [open-source, technology-agnostic]
 ---
 
+import Figure from "../../components/Figure.astro";
+
 ## Idea
 
 Development workflows that involve sensitive code or data increasingly want AI assistance without sending that context to an external model provider by default. This experiment explores a hybrid pattern: a local, self-hosted model handles the majority of development assistance, with a deliberate, logged escalation path to a larger external frontier model for tasks the local model genuinely can't handle well.
@@ -23,6 +25,14 @@ An all-local setup avoids the data exposure question entirely but caps capabilit
 - Define escalation criteria explicitly — task type, context sensitivity, and a confidence signal from the local model — rather than leaving the choice to the developer in the moment.
 - Log every escalation: what was sent, to which provider, and why, so the escalation path is auditable rather than ambient.
 - Treat the external model as a capability of last resort, not a fallback used out of convenience.
+
+<Figure
+  caption="Escalation routing — local model by default, external model as a logged last resort"
+  description="A developer request first checks whether escalation criteria are met. If not, it's handled entirely by the local model and returned as a response. If escalation criteria are met, the request goes to an external frontier model, and that escalation is logged before the response is returned."
+  width="standard"
+>
+  <img src="/diagrams/private-hybrid-ai-development-flow.svg" alt="" />
+</Figure>
 
 ## Status
 

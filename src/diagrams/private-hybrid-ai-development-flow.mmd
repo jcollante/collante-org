@@ -1,0 +1,7 @@
+flowchart LR
+  A[Developer request] --> B{Escalation criteria met?}
+  B -- No --> C[Local model]
+  B -- Yes --> D[External frontier model]
+  C --> E[Response]
+  D --> F[Logged escalation]
+  F --> E

@@ -1,0 +1,105 @@
+---
+/**
+ * Universal wrapper for the three diagram tiers (custom SVG, build-time
+ * Mermaid SVG, semantic HTML/CSS). `variant="diagram"` (default) treats the
+ * slotted content as a single accessible graphic — role="img" + an
+ * accessible name/description, since the component doesn't control markup
+ * inside arbitrary slotted SVG/img content and can't inject native
+ * <title>/<desc> into it. `variant="table"` renders no such wrapper: a
+ * semantic <table> must keep its own table semantics, not be flattened
+ * into "image" for assistive tech.
+ */
+interface Props {
+  caption: string;
+  description?: string;
+  width?: "reading" | "standard" | "wide";
+  variant?: "diagram" | "table";
+  id?: string;
+}
+
+const { caption, description, width = "standard", variant = "diagram", id } = Astro.props;
+const descId = description ? `${id ?? caption.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-desc` : undefined;
+---
+
+<figure class={`figure figure--${width}`} id={id}>
+  {
+    variant === "diagram" ? (
+      <div class="figure__media" role="img" aria-label={caption} aria-describedby={descId}>
+        <slot />
+      </div>
+    ) : (
+      <div class="figure__media figure__media--table">
+        <slot />
+      </div>
+    )
+  }
+  <figcaption class="figure__caption">{caption}</figcaption>
+  {
+    description && (
+      <details class="figure__description" id={descId}>
+        <summary>Detailed description</summary>
+        <p>{description}</p>
+      </details>
+    )
+  }
+</figure>
+
+<style>
+  .figure {
+    margin-inline: auto;
+    margin-block: var(--space-7) var(--space-6);
+  }
+
+  .figure--reading {
+    max-width: var(--width-reading);
+  }
+
+  .figure--standard {
+    max-width: var(--width-standard);
+  }
+
+  .figure--wide {
+    max-width: var(--width-wide);
+  }
+
+  .figure__media :global(svg),
+  .figure__media :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: var(--border-width) solid var(--color-line);
+    background: var(--color-surface);
+  }
+
+  .figure__media--table {
+    overflow-x: auto;
+  }
+
+  .figure__media--table :global(svg),
+  .figure__media--table :global(img) {
+    border: none;
+    background: none;
+  }
+
+  .figure__caption {
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .figure__description {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+  }
+
+  .figure__description summary {
+    cursor: pointer;
+    color: var(--color-accent);
+  }
+
+  .figure__description p {
+    margin-top: var(--space-2);
+    color: var(--color-text-muted);
+    line-height: var(--leading-body);
+  }
+</style>

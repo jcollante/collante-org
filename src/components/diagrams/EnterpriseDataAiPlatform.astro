@@ -1,0 +1,110 @@
+---
+/**
+ * Hand-authored flagship diagram. The parent Figure.astro wrapper owns the
+ * accessible name/description (role="img" + aria-label/aria-describedby on
+ * its wrapping div), so this SVG carries role="presentation" to avoid a
+ * second, competing accessible name being exposed for the same graphic.
+ */
+---
+
+<svg
+  role="presentation"
+  focusable="false"
+  viewBox="0 0 1200 400"
+  xmlns="http://www.w3.org/2000/svg"
+  class="ai-platform-diagram"
+>
+  <style>
+    .ai-platform-diagram text {
+      font-family: var(--font-mono);
+      fill: var(--color-text);
+    }
+    .ai-platform-diagram .lane-label {
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      fill: var(--color-text-muted);
+      text-transform: uppercase;
+    }
+    .ai-platform-diagram .node {
+      fill: var(--color-surface);
+      stroke: var(--color-line);
+      stroke-width: 1;
+    }
+    .ai-platform-diagram .node-text {
+      font-size: 13px;
+      fill: var(--color-text);
+    }
+    .ai-platform-diagram .boundary {
+      fill: none;
+      stroke: var(--color-accent);
+      stroke-width: 1.5;
+    }
+    .ai-platform-diagram .boundary-label {
+      font-size: 11px;
+      fill: var(--color-accent);
+      letter-spacing: 0.03em;
+    }
+    .ai-platform-diagram .flow-line {
+      stroke: var(--color-text-muted);
+      stroke-width: 1.25;
+      marker-end: url(#arrowhead);
+    }
+  </style>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L6,3 L0,6 Z" fill="var(--color-text-muted)" />
+    </marker>
+  </defs>
+
+  <!-- Lane labels -->
+  <text x="125" y="55" text-anchor="middle" class="lane-label">Sources</text>
+  <text x="345" y="55" text-anchor="middle" class="lane-label">Ingestion</text>
+  <text x="610" y="55" text-anchor="middle" class="lane-label">Data Platform</text>
+  <text x="875" y="55" text-anchor="middle" class="lane-label">Data Products</text>
+  <text x="1085" y="55" text-anchor="middle" class="lane-label">Consumption</text>
+
+  <!-- Sources -->
+  <rect class="node" x="40" y="70" width="170" height="50" rx="2" />
+  <text x="125" y="99" text-anchor="middle" class="node-text">Operational Systems</text>
+  <rect class="node" x="40" y="142" width="170" height="50" rx="2" />
+  <text x="125" y="171" text-anchor="middle" class="node-text">SaaS Applications</text>
+  <rect class="node" x="40" y="214" width="170" height="50" rx="2" />
+  <text x="125" y="243" text-anchor="middle" class="node-text">Streaming Events</text>
+
+  <!-- Ingestion -->
+  <rect class="node" x="260" y="106" width="170" height="50" rx="2" />
+  <text x="345" y="135" text-anchor="middle" class="node-text">Batch</text>
+  <rect class="node" x="260" y="178" width="170" height="50" rx="2" />
+  <text x="345" y="207" text-anchor="middle" class="node-text">CDC / Streaming</text>
+
+  <!-- Data Platform (governance boundary) -->
+  <rect class="boundary" x="480" y="66" width="260" height="196" rx="2" />
+  <text x="500" y="86" class="boundary-label">Unity Catalog — Governance Boundary</text>
+  <rect class="node" x="500" y="96" width="220" height="46" rx="2" />
+  <text x="610" y="123" text-anchor="middle" class="node-text">Bronze</text>
+  <rect class="node" x="500" y="152" width="220" height="46" rx="2" />
+  <text x="610" y="179" text-anchor="middle" class="node-text">Silver</text>
+  <rect class="node" x="500" y="208" width="220" height="46" rx="2" />
+  <text x="610" y="235" text-anchor="middle" class="node-text">Gold</text>
+
+  <!-- Data Products -->
+  <rect class="node" x="790" y="106" width="170" height="50" rx="2" />
+  <text x="875" y="135" text-anchor="middle" class="node-text">Curated Datasets</text>
+  <rect class="node" x="790" y="178" width="170" height="50" rx="2" />
+  <text x="875" y="207" text-anchor="middle" class="node-text">Feature Sets</text>
+
+  <!-- Consumption -->
+  <rect class="node" x="1010" y="70" width="150" height="50" rx="2" />
+  <text x="1085" y="99" text-anchor="middle" class="node-text">BI</text>
+  <rect class="node" x="1010" y="142" width="150" height="50" rx="2" />
+  <text x="1085" y="171" text-anchor="middle" class="node-text">ML / Model Serving</text>
+  <rect class="node" x="1010" y="214" width="150" height="50" rx="2" />
+  <text x="1085" y="243" text-anchor="middle" class="node-text">Agentic AI</text>
+
+  <!-- Flow arrows -->
+  <line x1="212" y1="164" x2="257" y2="164" class="flow-line" />
+  <line x1="432" y1="164" x2="477" y2="164" class="flow-line" />
+  <line x1="742" y1="164" x2="787" y2="164" class="flow-line" />
+  <line x1="962" y1="164" x2="1007" y2="164" class="flow-line" />
+</svg>
