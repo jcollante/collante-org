@@ -18,6 +18,9 @@ pnpm-debug.log*
 .env.local
 .env.*.local
 
+# local-only notes (credentials, account IDs) — never committed
+*.local.md
+
 # typescript
 *.tsbuildinfo
 
