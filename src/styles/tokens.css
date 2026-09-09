@@ -1,0 +1,64 @@
+/*
+  Canonical V1 design token source.
+  Do not duplicate literal color/spacing/type values in component CSS —
+  reference these custom properties instead. New tokens belong here,
+  centrally, not scattered inline.
+*/
+
+:root {
+  /* Color */
+  --color-bg: #f7f7f5;
+  --color-surface: #ffffff;
+  --color-text: #171717;
+  --color-text-muted: #626262;
+  --color-line: #dfdfdc;
+  --color-accent: #1d4ed8;
+  --color-ink: #142033;
+
+  /* Typography */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+
+  /* Type scale */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+  --text-4xl: clamp(2.75rem, 6vw, 4.75rem);
+
+  /* Line height */
+  --leading-tight: 1.08;
+  --leading-heading: 1.18;
+  --leading-body: 1.65;
+
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+
+  /* Layout */
+  --width-reading: 45rem;
+  --width-standard: 65rem;
+  --width-wide: 80rem;
+  --page-gutter: clamp(1.25rem, 4vw, 3rem);
+
+  /* Borders */
+  --border-width: 1px;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+
+  /* Motion */
+  --duration-fast: 150ms;
+  --duration-normal: 220ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}

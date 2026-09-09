@@ -12,13 +12,13 @@ Do the phases roughly in order. Phase 12 (writing the actual launch content) is 
 
 **Goal:** an empty Astro project that runs, with the exact dependency set and nothing extra.
 
-- [ ] `npm create astro@latest .` — choose TypeScript strict, empty template, no example content.
-- [ ] `npx astro add mdx`
-- [ ] `npx astro add sitemap`
-- [ ] `npm install @astrojs/rss zod shiki mermaid`
-- [ ] `npm install -D @axe-core/playwright playwright`
-- [ ] Confirm `astro.config.mjs` only lists the integrations above — no framework integrations (`@astrojs/react`, etc.) yet.
-- [ ] Initialize Git, first commit.
+- [x] `npm create astro@latest .` — choose TypeScript strict, empty template, no example content.
+- [x] `npx astro add mdx`
+- [x] `npx astro add sitemap`
+- [x] `npm install @astrojs/rss zod shiki mermaid`
+- [x] `npm install -D @axe-core/playwright playwright`
+- [x] Confirm `astro.config.mjs` only lists the integrations above — no framework integrations (`@astrojs/react`, etc.) yet.
+- [x] Initialize Git, first commit.
 
 **Definition of done:** `npm run dev` serves the default Astro welcome page with no errors, `package.json` dependencies match the approved list exactly.
 
@@ -30,12 +30,12 @@ Do the phases roughly in order. Phase 12 (writing the actual launch content) is 
 
 **Goal:** one canonical source of visual truth, wired into CSS.
 
-- [ ] Create `design-tokens.json` at repo root with the color/font/spacing/contentWidth/diagram values.
-- [ ] Create `src/styles/global.css` with `@layer reset, tokens, base, components;` and define CSS custom properties in the `tokens` layer from the JSON values (hand-transcribed is fine — a build-time import is unnecessary tooling for six colors and a spacing scale).
-- [ ] Define the three content-width custom properties (`--width-narrow`, `--width-standard`, `--width-wide`) in the same layer.
-- [ ] Add a CSS reset in the `reset` layer (box-sizing, margin removal, etc.).
-- [ ] Import `global.css` once, in `BaseLayout.astro`.
-- [ ] Self-host Inter (400/500/600) and IBM Plex Mono (400/500) as WOFF2 in `public/fonts/`, `@font-face` in the `base` layer, `font-display: swap`.
+- [x] Create `src/styles/tokens.css` at as the canonical token source (superseding the `design-tokens.json` idea — see the full build spec appended below; a `tokens` CSS layer is simpler than a JSON→CSS build step for this token count).
+- [x] Create `src/styles/global.css` with `@layer reset, tokens, base, components;` and define CSS custom properties in the `tokens` layer via `@import "./tokens.css" layer(tokens)`.
+- [x] Define the three content-width custom properties (`--width-reading`, `--width-standard`, `--width-wide`) in the same layer.
+- [x] Add a CSS reset in the `reset` layer (box-sizing, margin removal, etc.).
+- [x] Import `global.css` once, in `BaseLayout.astro`.
+- [x] Self-host Inter (400/500, variable WOFF2, latin subset) and IBM Plex Mono (400, latin subset) in `public/fonts/`, `@font-face` in the `base` layer, `font-display: swap`. (Spec's font section calls for weights 400/500 only, not 600.)
 
 **Definition of done:** a blank page using `BaseLayout` renders with the correct background/text colors and both fonts loading, verified in the browser dev tools network tab (no FOUT/FOIT flash, no 404s on font files).
 
