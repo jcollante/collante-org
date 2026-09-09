@@ -10,7 +10,11 @@
     "build": "node scripts/render-mermaid.ts && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "render:diagrams": "node scripts/render-mermaid.ts"
+    "render:diagrams": "node scripts/render-mermaid.ts",
+    "check": "astro check",
+    "test:a11y": "node scripts/check-a11y.ts",
+    "validate:content": "astro sync",
+    "validate:adr": "astro sync"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.1",
@@ -26,7 +30,9 @@
     "esbuild": true
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@axe-core/playwright": "^4.13.0",
-    "playwright": "^1.63.0"
+    "playwright": "^1.63.0",
+    "typescript": "^6.0.3"
   }
 }

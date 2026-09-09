@@ -44,7 +44,7 @@ const areasOfPractice = [
     <meta property="og:image" content={new URL("/og-default.png", siteConfig.url).toString()} />
     <meta property="og:site_name" content="collante.ai" />
     <meta name="twitter:card" content="summary_large_image" />
-    <script type="application/ld+json" set:html={JSON.stringify(personJsonLd())} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(personJsonLd())} />
   </Fragment>
 
   <section class="hero container container--standard">
