@@ -1,0 +1,213 @@
+---
+import { primaryNav, siteConfig } from "../lib/site";
+
+const currentPath = Astro.url.pathname;
+
+function isActive(href: string): boolean {
+  if (href === "/") return currentPath === "/";
+  return currentPath === href || currentPath.startsWith(href);
+}
+---
+
+<header class="site-header">
+  <div class="site-header__inner container container--wide">
+    <a href="/" class="site-header__brand">
+      collante<span class="site-header__brand-accent">.ai</span>
+    </a>
+
+    <nav class="site-header__nav" aria-label="Primary">
+      <ul>
+        {
+          primaryNav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="site-header__utility">
+      <a href={siteConfig.linkedInUrl}>LinkedIn</a>
+      <a href={`mailto:${siteConfig.email}`}>Email</a>
+    </div>
+
+    <details class="site-header__mobile">
+      <summary aria-label="Open menu">
+        <span aria-hidden="true" class="site-header__mobile-icon"></span>
+        <span class="visually-hidden">Menu</span>
+      </summary>
+      <nav aria-label="Primary">
+        <ul>
+          {
+            primaryNav.map((item) => (
+              <li>
+                <a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+          <li class="site-header__mobile-divider">
+            <a href={siteConfig.linkedInUrl}>LinkedIn</a>
+          </li>
+          <li>
+            <a href={`mailto:${siteConfig.email}`}>Email</a>
+          </li>
+        </ul>
+      </nav>
+    </details>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: var(--border-width) solid var(--color-line);
+    background: var(--color-bg);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    padding-block: var(--space-4);
+  }
+
+  .site-header__brand {
+    font-family: var(--font-mono);
+    font-size: var(--text-base);
+    font-weight: 400;
+    color: var(--color-text);
+    white-space: nowrap;
+  }
+
+  .site-header__brand-accent {
+    color: var(--color-accent);
+  }
+
+  .site-header__nav {
+    flex: 1;
+  }
+
+  .site-header__nav ul {
+    display: flex;
+    gap: var(--space-5);
+  }
+
+  .site-header__nav a {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    padding-block: var(--space-1);
+    border-bottom: var(--border-width) solid transparent;
+  }
+
+  .site-header__nav a:hover {
+    color: var(--color-text);
+  }
+
+  .site-header__nav a[aria-current="page"] {
+    color: var(--color-text);
+    border-bottom-color: var(--color-accent);
+  }
+
+  .site-header__utility {
+    display: flex;
+    gap: var(--space-4);
+  }
+
+  .site-header__utility a {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .site-header__utility a:hover {
+    color: var(--color-text);
+  }
+
+  .site-header__mobile {
+    display: none;
+    margin-left: auto;
+    position: relative;
+  }
+
+  .site-header__mobile summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: var(--border-width) solid var(--color-line);
+  }
+
+  .site-header__mobile summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .site-header__mobile-icon {
+    display: block;
+    width: 1rem;
+    height: 1px;
+    background: var(--color-text);
+    position: relative;
+  }
+
+  .site-header__mobile-icon::before,
+  .site-header__mobile-icon::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 1rem;
+    height: 1px;
+    background: var(--color-text);
+  }
+
+  .site-header__mobile-icon::before {
+    top: -5px;
+  }
+
+  .site-header__mobile-icon::after {
+    top: 5px;
+  }
+
+  .site-header__mobile nav {
+    position: absolute;
+    top: calc(100% + var(--space-2));
+    right: 0;
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-line);
+    padding: var(--space-4);
+    min-width: 12rem;
+  }
+
+  .site-header__mobile nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .site-header__mobile nav a {
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+
+  .site-header__mobile-divider {
+    margin-top: var(--space-2);
+    padding-top: var(--space-3);
+    border-top: var(--border-width) solid var(--color-line);
+  }
+
+  @media (max-width: 47.9375rem) {
+    .site-header__nav,
+    .site-header__utility {
+      display: none;
+    }
+
+    .site-header__mobile {
+      display: block;
+    }
+  }
+</style>

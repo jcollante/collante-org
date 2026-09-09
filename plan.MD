@@ -63,10 +63,12 @@ Do the phases roughly in order. Phase 12 (writing the actual launch content) is 
 
 **Goal:** the shell every page shares.
 
-- [ ] `SiteHeader.astro`: site name (links to `/`, no "Home" label), nav (Architecture / Accelerators / Decisions / Insights / Lab / About), LinkedIn + email on the right.
-- [ ] `SiteFooter.astro`: name, role, LinkedIn, email, GitHub (secondary, if included), current year.
-- [ ] `BaseLayout.astro`: imports global CSS, renders header/footer, exposes a `<slot />` for page content, sets the narrow/standard/wide width as a prop.
-- [ ] Wire `BaseLayout` into `src/pages/index.astro` with placeholder content to verify the shell.
+- [x] `SiteHeader.astro`: site name (links to `/`, no "Home" label), nav — per the build spec §11 the top nav is **Architecture / Accelerators / Insights / Lab / About** (Decisions is a real, distinct collection but deliberately not a top-nav item — it's surfaced from the homepage and cross-linked from Insights/Architecture instead), LinkedIn + email on the right. Mobile nav uses a zero-JS `<details>/<summary>` disclosure (keyboard-tested: opens on Enter, focus moves into the panel).
+- [x] `SiteFooter.astro`: name, role, LinkedIn, email, GitHub (secondary, only rendered if `siteConfig.githubUrl` is set), current year via `new Date().getFullYear()`.
+- [x] `BaseLayout.astro`: imports global CSS, renders header/footer, skip-to-content link, exposes a `<slot />` for page content, optional `width` prop (reading/standard/wide) wraps the slot in a `.container--*`; composite pages (homepage) manage per-section containers themselves instead.
+- [x] Wire `BaseLayout` into `src/pages/index.astro` with placeholder content to verify the shell.
+- [x] Verified via Playwright: tab order is skip-link → header → footer in a sensible sequence, mobile disclosure opens via keyboard, focus-visible outlines render, 0 axe violations.
+- [ ] **Blocked on real values** — `src/lib/site.ts` has placeholder LinkedIn URL and email (`hello@collante.ai`); need the real LinkedIn profile URL and the contact email to publish, and whether to include a GitHub link.
 
 **Definition of done:** every route (even empty stubs) renders a consistent header and footer with working links, keyboard-tabbable in a sensible order, visible focus states on every link.
 

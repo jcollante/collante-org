@@ -1,11 +1,16 @@
 ---
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
 import "../styles/global.css";
 
 interface Props {
   title?: string;
+  description?: string;
+  /** Wraps <slot /> in a single container width. Omit for pages that manage their own per-section containers (e.g. the homepage). */
+  width?: "reading" | "standard" | "wide";
 }
 
-const { title = "collante.ai" } = Astro.props;
+const { title = "collante.ai — Jonatan Collante, Data & AI Architect", description, width } = Astro.props;
 ---
 
 <!doctype html>
@@ -13,6 +18,7 @@ const { title = "collante.ai" } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link
       rel="preload"
       href="/fonts/inter-variable-latin.woff2"
@@ -21,8 +27,23 @@ const { title = "collante.ai" } = Astro.props;
       crossorigin
     />
     <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <slot name="head" />
   </head>
   <body>
-    <slot />
+    <a href="#content" class="skip-link">Skip to content</a>
+    <SiteHeader />
+    <main id="content">
+      {
+        width ? (
+          <div class={`container container--${width}`}>
+            <slot />
+          </div>
+        ) : (
+          <slot />
+        )
+      }
+    </main>
+    <SiteFooter />
   </body>
 </html>
