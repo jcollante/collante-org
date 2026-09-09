@@ -1,0 +1,183 @@
+---
+import AdrMeta from "../components/AdrMeta.astro";
+import TagList from "../components/TagList.astro";
+import BaseLayout from "./BaseLayout.astro";
+import { siteConfig } from "../lib/site";
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  updatedDate?: Date;
+  patternTags?: string[];
+  stackTags?: string[];
+  eyebrow?: string;
+  jsonLdType?: string;
+  adr?: {
+    decisionNumber: number;
+    decisionStatus: "proposed" | "accepted" | "superseded" | "deprecated";
+    supersedes?: number;
+    supersededBy?: number;
+  };
+}
+
+const {
+  title,
+  description,
+  date,
+  updatedDate,
+  patternTags = [],
+  stackTags = [],
+  eyebrow,
+  jsonLdType = "TechArticle",
+  adr,
+} = Astro.props;
+
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).toString();
+const ogImageUrl = new URL("/og-default.png", Astro.site).toString();
+
+const dateFormatter = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "long", day: "numeric" });
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": jsonLdType,
+  headline: title,
+  description,
+  datePublished: date.toISOString(),
+  dateModified: (updatedDate ?? date).toISOString(),
+  author: {
+    "@type": "Person",
+    name: siteConfig.name,
+    url: siteConfig.url,
+  },
+  url: canonicalUrl,
+};
+---
+
+<BaseLayout title={`${title} — collante.ai`} description={description}>
+  <Fragment slot="head">
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:site_name" content="collante.ai" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta property="article:published_time" content={date.toISOString()} />
+    {updatedDate && <meta property="article:modified_time" content={updatedDate.toISOString()} />}
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </Fragment>
+
+  <article class="article container container--wide">
+    {adr && <div class="article__constrain"><AdrMeta {...adr} /></div>}
+    <header class="article__header article__constrain">
+      {eyebrow && <p class="article__eyebrow">{eyebrow}</p>}
+      <h1>{title}</h1>
+      <p class="article__meta">
+        <time datetime={date.toISOString()}>{dateFormatter.format(date)}</time>
+        {updatedDate && <span> · Updated {dateFormatter.format(updatedDate)}</span>}
+      </p>
+    </header>
+
+    <div class="article__body">
+      <slot />
+    </div>
+
+    <footer class="article__footer article__constrain">
+      <TagList patternTags={patternTags} stackTags={stackTags} />
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .article {
+    padding-block: var(--space-8) var(--space-9);
+  }
+
+  .article__constrain {
+    max-width: var(--width-reading);
+    margin-inline: auto;
+  }
+
+  .article__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: var(--space-3);
+  }
+
+  .article__meta {
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .article__body {
+    margin-top: var(--space-7);
+  }
+
+  /*
+    Only reading-width-constrain prose children. Figure is deliberately
+    excluded here so it can render at its own width (up to --width-wide)
+    via Figure.astro's own container class, without a breakout hack
+    fighting Figure's scoped max-width for specificity.
+  */
+  .article__body :global(> :not(figure)) {
+    max-width: var(--width-reading);
+    margin-inline: auto;
+  }
+
+  .article__body :global(h2) {
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
+  }
+
+  .article__body :global(h3) {
+    margin-top: var(--space-6);
+    margin-bottom: var(--space-3);
+  }
+
+  .article__body :global(p) {
+    margin-top: var(--space-4);
+  }
+
+  .article__body :global(ul),
+  .article__body :global(ol) {
+    margin-top: var(--space-4);
+    padding-left: var(--space-5);
+  }
+
+  .article__body :global(ul) {
+    list-style: disc;
+  }
+
+  .article__body :global(ol) {
+    list-style: decimal;
+  }
+
+  .article__body :global(li + li) {
+    margin-top: var(--space-2);
+  }
+
+  .article__body :global(a) {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+  }
+
+  .article__body :global(code) {
+    font-size: 0.9em;
+    background: var(--color-surface);
+    border: var(--border-width) solid var(--color-line);
+    padding: 0.1em 0.35em;
+  }
+
+  .article__footer {
+    margin-top: var(--space-8);
+    padding-top: var(--space-5);
+    border-top: var(--border-width) solid var(--color-line);
+  }
+</style>

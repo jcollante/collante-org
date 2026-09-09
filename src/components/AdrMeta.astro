@@ -1,0 +1,96 @@
+---
+import { getCollection } from "astro:content";
+
+interface Props {
+  decisionNumber: number;
+  decisionStatus: "proposed" | "accepted" | "superseded" | "deprecated";
+  supersedes?: number;
+  supersededBy?: number;
+}
+
+const { decisionNumber, decisionStatus, supersedes, supersededBy } = Astro.props;
+
+function pad(n: number): string {
+  return String(n).padStart(3, "0");
+}
+
+const allDecisions = (supersedes || supersededBy) ? await getCollection("decisions") : [];
+
+function findSlug(num: number): string | undefined {
+  return allDecisions.find((d) => d.data.decisionNumber === num)?.id;
+}
+
+const supersedesSlug = supersedes ? findSlug(supersedes) : undefined;
+const supersededBySlug = supersededBy ? findSlug(supersededBy) : undefined;
+---
+
+<div class="adr-meta">
+  <p class="adr-meta__id">ADR·{pad(decisionNumber)}</p>
+  <p class:list={["adr-meta__status", `adr-meta__status--${decisionStatus}`]}>
+    Status: {decisionStatus}
+  </p>
+  {
+    supersedes && (
+      <p class="adr-meta__relation">
+        Supersedes{" "}
+        {supersedesSlug ? (
+          <a href={`/decisions/${supersedesSlug}/`}>ADR·{pad(supersedes)}</a>
+        ) : (
+          `ADR·${pad(supersedes)}`
+        )}
+      </p>
+    )
+  }
+  {
+    supersededBy && (
+      <p class="adr-meta__relation">
+        Superseded by{" "}
+        {supersededBySlug ? (
+          <a href={`/decisions/${supersededBySlug}/`}>ADR·{pad(supersededBy)}</a>
+        ) : (
+          `ADR·${pad(supersededBy)}`
+        )}
+      </p>
+    )
+  }
+</div>
+
+<style>
+  .adr-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-4);
+    padding-bottom: var(--space-4);
+    margin-bottom: var(--space-5);
+    border-bottom: var(--border-width) solid var(--color-line);
+    font-family: var(--font-mono);
+  }
+
+  .adr-meta__id {
+    color: var(--color-ink);
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+
+  .adr-meta__status {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--color-text-muted);
+  }
+
+  .adr-meta__status--superseded,
+  .adr-meta__status--deprecated {
+    opacity: 0.7;
+  }
+
+  .adr-meta__relation {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .adr-meta__relation a {
+    color: var(--color-accent);
+  }
+</style>

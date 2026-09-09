@@ -1,0 +1,62 @@
+---
+interface Props {
+  patternTags?: string[];
+  stackTags?: string[];
+}
+
+const { patternTags = [], stackTags = [] } = Astro.props;
+
+function label(tag: string): string {
+  return tag.replace(/-/g, " ");
+}
+---
+
+{
+  (patternTags.length > 0 || stackTags.length > 0) && (
+    <ul class="tag-list">
+      {patternTags.map((tag) => (
+        <li>
+          <a href={`/tags/${tag}/`} class="tag tag--pattern">
+            {label(tag)}
+          </a>
+        </li>
+      ))}
+      {stackTags.map((tag) => (
+        <li>
+          <a href={`/tags/${tag}/`} class="tag tag--stack">
+            {label(tag)}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    border: var(--border-width) solid var(--color-line);
+    padding: var(--space-1) var(--space-3);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+
+  .tag:hover {
+    color: var(--color-text);
+    border-color: var(--color-text);
+  }
+
+  .tag--stack {
+    font-family: var(--font-mono);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+</style>

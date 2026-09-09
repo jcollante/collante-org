@@ -96,10 +96,11 @@ Do the phases roughly in order. Phase 12 (writing the actual launch content) is 
 
 **Goal:** the shared machinery every content page uses.
 
-- [ ] `AdrMeta.astro`: renders `ADR·007` styling, status, and clickable supersession links — used only in `decisions/[slug].astro`.
-- [ ] `TagList.astro`: renders pattern/stack tags as text + thin border, linking to `/tags/[tag]`.
-- [ ] `ArticleLayout.astro`: narrow content width, canonical URL, OG meta tags, JSON-LD (`TechArticle` or the closer-fitting type), renders `TagList` and (for decisions) `AdrMeta`.
-- [ ] Build `src/pages/tags/[tag].astro` — a static list of everything sharing a tag, generated via `getStaticPaths()`.
+- [x] `AdrMeta.astro`: renders `ADR·007`-style id, status, and clickable supersession links (resolved from `decisionNumber` to the target's slug via `getCollection("decisions")`) — imported by `ArticleLayout` and only ever activated by `decisions/[slug].astro` passing its `adr` prop.
+- [x] `TagList.astro`: renders pattern tags (sans, uppercase) and stack tags (mono, matching the "technical identifier" convention) as text + thin border, linking to `/tags/[tag]/`.
+- [x] `ArticleLayout.astro`: canonical URL, OG meta tags, `TechArticle` JSON-LD, renders `TagList` and (conditionally, for decisions) `AdrMeta`. Reading-width is applied per-child (`.article__body > :not(figure)`) rather than to the whole article, so `Figure`'s own wide/standard variants render correctly without fighting a breakout hack against Figure's scoped max-width.
+- [x] Built `[slug].astro` for all five collections (`isBuildable` filtered — drafts excluded from production paths, archived still addressable) and `src/pages/tags/[tag].astro` via `getStaticPaths()`, aggregating pattern+stack tags across all five collections' `isListable` (published-only) entries.
+- [x] Verified: meta tags/canonical/OG/JSON-LD all correct via view-source; axe run against all 5 real article pages + a tag page — 0 violations on every one.
 
 **Definition of done:** a single real article in each of the five collections renders through `ArticleLayout`, with correct meta tags (check via browser view-source), and tag pages list the right content.
 

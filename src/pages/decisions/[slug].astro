@@ -1,0 +1,31 @@
+---
+import { getCollection, render } from "astro:content";
+import ArticleLayout from "../../layouts/ArticleLayout.astro";
+import { isBuildable } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("decisions", isBuildable);
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<ArticleLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  date={entry.data.date}
+  updatedDate={entry.data.updatedDate}
+  patternTags={entry.data.patternTags}
+  stackTags={entry.data.stackTags}
+  jsonLdType="TechArticle"
+  adr={{
+    decisionNumber: entry.data.decisionNumber,
+    decisionStatus: entry.data.decisionStatus,
+    supersedes: entry.data.supersedes,
+    supersededBy: entry.data.supersededBy,
+  }}
+>
+  <Content />
+</ArticleLayout>

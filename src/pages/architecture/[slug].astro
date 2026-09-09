@@ -1,0 +1,25 @@
+---
+import { getCollection, render } from "astro:content";
+import ArticleLayout from "../../layouts/ArticleLayout.astro";
+import { isBuildable } from "../../lib/content";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("architecture", isBuildable);
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<ArticleLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  date={entry.data.date}
+  updatedDate={entry.data.updatedDate}
+  patternTags={entry.data.patternTags}
+  stackTags={entry.data.stackTags}
+  eyebrow={`Architecture · ${entry.data.architectureType}`}
+>
+  <Content />
+</ArticleLayout>

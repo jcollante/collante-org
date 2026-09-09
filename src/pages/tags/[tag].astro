@@ -1,0 +1,130 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { isListable } from "../../lib/content";
+
+interface TaggedItem {
+  title: string;
+  description: string;
+  date: Date;
+  href: string;
+  collection: string;
+}
+
+export async function getStaticPaths() {
+  const basePathFor: Record<string, string> = {
+    architecture: "/architecture/",
+    accelerators: "/accelerators/",
+    decisions: "/decisions/",
+    insights: "/insights/",
+    lab: "/lab/",
+  };
+
+  const byTag = new Map<string, TaggedItem[]>();
+
+  for (const collectionName of ["architecture", "accelerators", "decisions", "insights", "lab"] as const) {
+    const entries = (await getCollection(collectionName)).filter(isListable);
+    for (const entry of entries) {
+      const tags = [...(entry.data.patternTags ?? []), ...(entry.data.stackTags ?? [])];
+      const item: TaggedItem = {
+        title: entry.data.title,
+        description: entry.data.description,
+        date: entry.data.date,
+        href: `${basePathFor[collectionName]}${entry.id}/`,
+        collection: collectionName,
+      };
+      for (const tag of tags) {
+        if (!byTag.has(tag)) byTag.set(tag, []);
+        byTag.get(tag)!.push(item);
+      }
+    }
+  }
+
+  return [...byTag.entries()].map(([tag, items]) => ({
+    params: { tag },
+    props: { tag, items: [...items].sort((a, b) => b.date.valueOf() - a.date.valueOf()) },
+  }));
+}
+
+interface Props {
+  tag: string;
+  items: TaggedItem[];
+}
+
+const { tag, items } = Astro.props;
+const label = tag.replace(/-/g, " ");
+---
+
+<BaseLayout title={`${label} — collante.ai`} description={`Architecture, decisions, and insights tagged ${label}.`} width="standard">
+  <div class="tag-page">
+    <p class="tag-page__eyebrow">Tag</p>
+    <h1>{label}</h1>
+
+    <ul class="tag-page__list">
+      {
+        items.map((item) => (
+          <li>
+            <a href={item.href} class="tag-page__item">
+              <p class="tag-page__item-collection">{item.collection}</p>
+              <h2>{item.title}</h2>
+              <p class="tag-page__item-description">{item.description}</p>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</BaseLayout>
+
+<style>
+  .tag-page {
+    padding-block: var(--space-8) var(--space-9);
+  }
+
+  .tag-page__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+
+  .tag-page h1 {
+    text-transform: capitalize;
+  }
+
+  .tag-page__list {
+    margin-top: var(--space-7);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tag-page__item {
+    display: block;
+    padding-block: var(--space-5);
+    border-top: var(--border-width) solid var(--color-line);
+  }
+
+  .tag-page__list li:last-child .tag-page__item {
+    border-bottom: var(--border-width) solid var(--color-line);
+  }
+
+  .tag-page__item-collection {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .tag-page__item h2 {
+    margin-top: var(--space-2);
+    font-size: var(--text-xl);
+    font-weight: 500;
+  }
+
+  .tag-page__item-description {
+    margin-top: var(--space-2);
+    color: var(--color-text-muted);
+    max-width: var(--width-reading);
+  }
+</style>
