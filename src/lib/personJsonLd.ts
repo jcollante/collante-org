@@ -8,6 +8,10 @@ export function personJsonLd() {
     jobTitle: siteConfig.role,
     url: siteConfig.url,
     email: siteConfig.email,
-    sameAs: [siteConfig.linkedInUrl, ...(siteConfig.githubUrl ? [siteConfig.githubUrl] : [])],
+    sameAs: [
+      siteConfig.linkedInUrl,
+      ...(siteConfig.githubUrl ? [siteConfig.githubUrl] : []),
+      siteConfig.databricksCredentialsUrl,
+    ],
   };
 }

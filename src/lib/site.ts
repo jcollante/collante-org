@@ -5,6 +5,7 @@ export const siteConfig = {
   linkedInUrl: "https://www.linkedin.com/in/jcollantehaad",
   email: "contact@collante.org",
   githubUrl: "https://github.com/jcollante" as string | undefined,
+  databricksCredentialsUrl: "https://credentials.databricks.com/profile/jcollante/wallet",
 };
 
 export const primaryNav = [

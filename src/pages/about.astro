@@ -28,48 +28,81 @@ const canonicalUrl = new URL("/about/", siteConfig.url).toString();
     <h1>{siteConfig.name}</h1>
     <p class="about__role">{siteConfig.role}</p>
 
-    <!--
-      TODO: real content needed for launch — see CONTENT_GUIDELINES.md.
-      Everything below is structurally complete but placeholder text,
-      clearly marked, pending the real bio/credentials.
-    -->
     <div class="about__intro">
+      <!-- TODO: replace with a real photo (no circular crop). -->
       <div class="about__portrait" role="img" aria-label="Portrait placeholder — replace with a real photo">
         <span>Portrait — TODO: replace with a real photo (no circular crop)</span>
       </div>
       <p class="about__positioning">
-        [TODO: 2–3 sentence positioning statement — what kind of problems you work on and for whom, in
-        your own words. Keep it to one paragraph; the full narrative goes below.]
+        Data &amp; AI Architect and technology consultant with 15+ years of experience across software
+        engineering, business intelligence, data engineering, cloud platforms and enterprise data
+        architecture. I design and deliver scalable Data &amp; AI solutions that bridge business
+        requirements, architecture and engineering.
       </p>
     </div>
 
     <section class="about__section">
       <h2>Experience</h2>
       <p>
-        [TODO: 1–2 paragraph experience narrative — the shape of the work, not a chronological CV. What
-        kinds of platforms, at what scale, for what kinds of organizations.]
+        For the past 8+ years I have worked at Deloitte as a Senior Consultant and Data &amp; AI Architect,
+        designing and delivering enterprise data platforms. My background combines hands-on technical expertise with client-facing consulting, technical
+        leadership, delivery, data governance and team development. I specialize in modern data platforms,
+        Azure Databricks, Lakehouse architectures, data engineering, ETL/ELT, data modelling and enterprise
+        integration.
+      </p>
+      <p>
+        Throughout my consulting career, I have worked directly with clients to shape solutions, define
+        architectures and implementation roadmaps, lead multidisciplinary teams, establish governance
+        practices and support presales through PoCs and solution presentations.
+      </p>
+      <p>
+        I am particularly interested in modern Data &amp; AI platforms that combine scalable data
+        engineering, strong governance and AI-ready architectures to create measurable business value.
+      </p>
+      <p>
+        Based in the Stuttgart/Ludwigsburg region and experienced working in international environments in
+        German and English.
       </p>
     </section>
 
     <section class="about__section">
       <h2>Areas of expertise</h2>
       <ul class="about__list">
-        <li>[TODO: e.g. Enterprise data platform architecture]</li>
-        <li>[TODO: e.g. Governance and lineage at scale]</li>
-        <li>[TODO: e.g. Agentic AI system design]</li>
+        <li>Data &amp; solution architecture</li>
+        <li>Lakehouse and cloud data platforms</li>
+        <li>Data engineering, ETL/ELT and data modelling</li>
+        <li>Data governance and architecture governance</li>
+        <li>Technical leadership and stakeholder management</li>
+        <li>Presales and proofs of concept</li>
       </ul>
     </section>
 
     <section class="about__section">
       <h2>Selected technologies</h2>
-      <p class="about__tech-line">[TODO: e.g. Databricks · Azure · Unity Catalog · Snowflake]</p>
+      <p class="about__tech-line">
+        Azure Databricks · Delta Lake · Unity Catalog · PySpark &amp; Spark SQL · Python · SQL · ADLS Gen2 ·
+        Azure Data Factory · Azure DevOps · Git · Terraform
+      </p>
     </section>
 
     <section class="about__section">
       <h2>Certifications</h2>
       <ul class="about__list">
-        <li>[TODO: real certifications only — omit this section entirely if none apply]</li>
+        <li>Databricks Certified Data Engineer Professional (2026)</li>
+        <li>Databricks Certified Data Engineer Associate (2026)</li>
+        <li>Microsoft DP-200: Implementing an Azure Data Solution (2021)</li>
+        <li>ICP-ACC Agile Coaching (2023)</li>
+        <li>SAFe Agilist (2022)</li>
+        <li>Certified ScrumMaster (CSM) (2022)</li>
       </ul>
+      <h3 class="about__subheading">Databricks accreditations</h3>
+      <ul class="about__list">
+        <li>Azure Databricks Platform Architect (2026)</li>
+        <li>Gen AI &amp; LLM on Databricks — Pre-Sales Verified (2026)</li>
+      </ul>
+      <p class="about__verify">
+        <a href={siteConfig.databricksCredentialsUrl}>Verify on Databricks Credentials</a>
+      </p>
     </section>
 
     <section class="about__section">
@@ -140,6 +173,10 @@ const canonicalUrl = new URL("/about/", siteConfig.url).toString();
     margin-top: var(--space-8);
   }
 
+  .about__section p + p {
+    margin-top: var(--space-4);
+  }
+
   .about__list {
     margin-top: var(--space-3);
     padding-left: var(--space-5);
@@ -148,6 +185,19 @@ const canonicalUrl = new URL("/about/", siteConfig.url).toString();
 
   .about__list li + li {
     margin-top: var(--space-2);
+  }
+
+  .about__subheading {
+    margin-top: var(--space-5);
+    font-size: var(--text-base);
+  }
+
+  .about__verify {
+    margin-top: var(--space-4);
+  }
+
+  .about__verify a {
+    color: var(--color-accent);
   }
 
   .about__tech-line {
