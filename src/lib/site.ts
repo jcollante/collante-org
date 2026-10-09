@@ -1,13 +1,10 @@
 export const siteConfig = {
   name: "Jonatan Collante",
   role: "Data & AI Architect",
-  url: "https://collante.ai",
-  // TODO: confirm the real LinkedIn profile URL — placeholder, not a guess.
-  linkedInUrl: "https://www.linkedin.com/in/TODO-jonatan-collante",
-  // TODO: confirm the public contact email to publish.
-  email: "hello@collante.ai",
-  // TODO: optional — set to a real GitHub URL if it should appear (footer, secondary), or leave undefined to omit.
-  githubUrl: undefined as string | undefined,
+  url: "https://www.collante.org",
+  linkedInUrl: "https://www.linkedin.com/in/jcollantehaad",
+  email: "contact@collante.org",
+  githubUrl: "https://github.com/jcollante" as string | undefined,
 };
 
 export const primaryNav = [

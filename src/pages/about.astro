@@ -7,7 +7,7 @@ const canonicalUrl = new URL("/about/", siteConfig.url).toString();
 ---
 
 <BaseLayout
-  title="About — collante.ai"
+  title="About — collante.org"
   description={`${siteConfig.name}, ${siteConfig.role} — background, expertise, and professional links.`}
   width="reading"
 >
@@ -18,7 +18,7 @@ const canonicalUrl = new URL("/about/", siteConfig.url).toString();
     <meta property="og:type" content="profile" />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={new URL("/og-default.png", siteConfig.url).toString()} />
-    <meta property="og:site_name" content="collante.ai" />
+    <meta property="og:site_name" content="collante.org" />
     <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(personJsonLd())} />
   </Fragment>

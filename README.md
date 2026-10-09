@@ -1,4 +1,4 @@
-# collante.ai
+# collante.org
 
 Personal site for Jonatan Collante — Data & AI Architect. A static, zero-client-JS Astro site built around five content collections (Architecture, Accelerators, Decisions, Insights, Lab) plus an About page.
 

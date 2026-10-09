@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://collante.ai/sitemap-index.xml
+Sitemap: https://www.collante.org/sitemap-index.xml

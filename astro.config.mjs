@@ -7,6 +7,6 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://collante.ai',
+  site: 'https://www.collante.org',
   integrations: [mdx(), sitemap()]
 });
