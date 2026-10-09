@@ -1,0 +1,54 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { primaryNav } from "../lib/site";
+---
+
+<BaseLayout title="Page not found — collante.org" width="reading">
+  <Fragment slot="head">
+    <meta name="robots" content="noindex" />
+  </Fragment>
+
+  <div class="not-found">
+    <p class="not-found__eyebrow">404</p>
+    <h1>Page not found</h1>
+    <p class="not-found__intro">
+      This page doesn't exist, or it has moved. Try one of the sections below, or start from the homepage.
+    </p>
+
+    <ul class="not-found__links">
+      {primaryNav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+    </ul>
+
+    <a class="btn btn--primary" href="/">Go to the homepage</a>
+  </div>
+</BaseLayout>
+
+<style>
+  .not-found {
+    padding-block: var(--space-8) var(--space-9);
+  }
+
+  .not-found__eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+
+  .not-found__intro {
+    margin-top: var(--space-4);
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+  }
+
+  .not-found__links {
+    margin-block: var(--space-6);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+
+  .not-found__links a {
+    color: var(--color-accent);
+  }
+</style>
