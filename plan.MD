@@ -1,4 +1,4 @@
-# collante.ai — Implementation plan
+# collante.org — Implementation plan
 
 ## How to use this document
 
@@ -68,7 +68,7 @@ Do the phases roughly in order. Phase 12 (writing the actual launch content) is 
 - [x] `BaseLayout.astro`: imports global CSS, renders header/footer, skip-to-content link, exposes a `<slot />` for page content, optional `width` prop (reading/standard/wide) wraps the slot in a `.container--*`; composite pages (homepage) manage per-section containers themselves instead.
 - [x] Wire `BaseLayout` into `src/pages/index.astro` with placeholder content to verify the shell.
 - [x] Verified via Playwright: tab order is skip-link → header → footer in a sensible sequence, mobile disclosure opens via keyboard, focus-visible outlines render, 0 axe violations.
-- [ ] **Blocked on real values** — `src/lib/site.ts` has placeholder LinkedIn URL and email (`hello@collante.ai`); need the real LinkedIn profile URL and the contact email to publish, and whether to include a GitHub link.
+- [x] Real contact values set in `src/lib/site.ts`: LinkedIn (`linkedin.com/in/jcollantehaad`), email (`contact@collante.org`), and GitHub (`github.com/jcollante`, shown in the footer, About page, and Person JSON-LD `sameAs`).
 
 **Definition of done:** every route (even empty stubs) renders a consistent header and footer with working links, keyboard-tabbable in a sensible order, visible focus states on every link.
 
@@ -160,14 +160,14 @@ Do the phases roughly in order. Phase 12 (writing the actual launch content) is 
 
 ## Phase 9 — Deployment
 
-**Goal:** `collante.ai` resolves to the built site with no manual steps after `git push`.
+**Goal:** `collante.org` resolves to the built site with no manual steps after `git push`.
 
 - [x] Added `public/_headers`: CSP (`script-src 'self'` — no inline/unsafe-inline needed since there's zero executable client JS anywhere on the site yet; `style-src 'self' 'unsafe-inline'` since Astro's scoped component styles emit inline `<style>` tags; `frame-ancestors 'none'`, `object-src 'none'`, `upgrade-insecure-requests`), `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`. **Note for whoever enables Cloudflare Web Analytics later**: if using the JS-snippet option (not the scriptless one), `script-src` (and likely `connect-src`) will need `https://static.cloudflareinsights.com` added, or the analytics script gets silently blocked.
 - [x] Added `.node-version` (pinned to Node 24) so Cloudflare Pages' build environment matches what this whole build was actually tested against — `scripts/render-mermaid.ts` is invoked as a plain `node` script (not through Vite/esbuild) and needs Node's native TypeScript stripping (reliable from ~22.6+); CI's workflow now reads the same file as its single source of truth.
 - [x] Did a full production build + preview locally and **crawled the entire site programmatically** (from the homepage, following only real rendered links) instead of manually clicking through — 25/25 pages reachable, zero broken internal links, zero broken asset requests.
 - [ ] **Needs you** — connecting the GitHub repo to Cloudflare Pages, pointing DNS at it, enabling HSTS/DNSSEC, and turning on Web Analytics all require your actual GitHub/Cloudflare/registrar accounts, which I don't have access to. Everything that could be prepared as files ahead of that (headers, Node pinning, CI) is done — ready for you to connect. Framework preset in Cloudflare Pages: "Astro" (build command `npm run build`, output directory `dist`).
 
-**Definition of done:** pushing to `main` produces a live deployment at `collante.ai` within a few minutes, with correct security headers (check via `curl -I` or an online header checker) and analytics recording a real pageview.
+**Definition of done:** pushing to `main` produces a live deployment at `collante.org` within a few minutes, with correct security headers (check via `curl -I` or an online header checker) and analytics recording a real pageview.
 
 **Commit:** `chore: deployment configuration and security headers`
 
@@ -227,6 +227,51 @@ Do the phases roughly in order. Phase 12 (writing the actual launch content) is 
 **Definition of done:** the site has enough real, cross-tagged content that the tag pages and homepage selections feel curated rather than sparse — this is a judgment call, not a checkbox, but "does this look like an archive or a template" is the test.
 
 **Commit:** `content: initial launch set — architecture, accelerators, decisions, insights, lab`
+
+---
+
+## Phase 12 — Corporate-network reachability (Zscaler and similar proxies)
+
+**Goal:** a recruiter or client clicking the link from inside a corporate network protected by Zscaler (or Palo Alto, Cisco Umbrella/Talos, Forcepoint, Symantec, etc.) sees the site, not a block or "caution" page. The target audience for this site is precisely people on locked-down enterprise networks, so this matters more than it would for a typical personal site.
+
+**Why it can fail by default:** secure web gateways classify every domain. A domain that's new, has no category, or looks like a placeholder typically lands in categories such as *Newly Registered Domains*, *Miscellaneous or Unknown*, or *Parked*, which many enterprise policies block or put behind a warning. None of that is about the site being unsafe; it's about the domain having no reputation yet. The fixes below build reputation and remove the signals that look suspicious.
+
+**Timing:** most of this has lead time (domain age, crawler categorization), so start it as soon as Phase 9's DNS is live, not after Phase 11 content is done.
+
+### 12.1 Domain age and history (start immediately)
+- [ ] Register/point `collante.org` as early as possible. "Newly registered" status ages out on its own (typically around 30 days), so the clock should start well before you share the link anywhere.
+- [ ] Check the domain's past: look it up in the Wayback Machine and on VirusTotal. If it was previously owned and used for something shady, it may be flagged as *Newly Revived* or carry old reputation, which then needs an explicit recategorization request (12.5).
+
+### 12.2 Don't publish a placeholder to the real domain
+- [x] **Repo side done:** `npm run check:launch` (`scripts/check-placeholders.ts`) fails while any `TODO` marker remains in the built pages or `src/lib/site.ts`; CI runs it as informational until Phase 11 lands, then it should become blocking and be appended to the Cloudflare Pages build command. Preview hosts (`*.pages.dev`) get `X-Robots-Tag: noindex` via `public/_headers`.
+- [ ] Keep placeholder content (placeholder portrait and bio, sparse collections) off `www.collante.org` until Phase 11 is done. Use the Cloudflare Pages `*.pages.dev` preview URL for review instead. Classifiers crawl what's there on first sight; a near-empty template risks being filed as *Parked* or low-content, and that first category tends to stick until someone requests a re-review.
+- [ ] Make sure the live site clearly identifies a real person and purpose: full name, role, About page, and a working contact route. That reads as a legitimate professional site to both automated and human reviewers.
+
+### 12.3 DNS, TLS, and redirects (Cloudflare + registrar)
+- [ ] One clean redirect: `http://collante.org`, `https://collante.org`, and `http://www.collante.org` all go to `https://www.collante.org/` in a **single** 301 hop. Redirect chains and mixed apex/www behavior are a common suspicious signal.
+- [ ] HTTPS only, valid certificate with the full chain, TLS 1.2+ (Cloudflare's defaults). `public/_headers` already sends `Strict-Transport-Security: max-age=300` (deliberately short); raise it to `max-age=31536000; includeSubDomains` once HTTPS and the redirect are confirmed on the live domain.
+- [ ] Enable DNSSEC at the registrar (already listed in Phase 9).
+- [ ] Add a CAA record limiting certificate issuance to the CA Cloudflare uses.
+- [ ] Email authentication on the domain, even before mail is in use: SPF, DKIM (once a mail provider is set up for `contact@collante.org`), and a DMARC record (start at `p=none` with reporting, tighten to `p=quarantine`/`reject` once you see it's clean). A domain with no email policy is easy to spoof, and spoofed phishing sent "from" your domain is the fastest way to get it blocklisted. If you decide not to receive mail on it, publish a null MX and `v=spf1 -all` instead.
+
+### 12.4 Don't block the classifiers
+- [ ] In Cloudflare, keep **Bot Fight Mode off** and the security level at its default; never leave "I'm Under Attack" mode on. JavaScript challenges and CAPTCHAs block the categorization crawlers, and a proxy that fetches a challenge page instead of content can't classify (or may flag) the site.
+- [ ] `robots.txt` already allows everything; keep it that way.
+- [x] Keep the current zero-third-party posture — now enforced: `npm run test:third-party` (`scripts/check-third-party.ts`, blocking in CI) fails on any external script/style/image/frame, form, URL-shortener link, or executable/archive download link in the built pages. Details: no external scripts, no URL shorteners in links, no downloadable executables/archives, no forms. All of these are things gateways inspect more aggressively. The site is currently static with no client JS (Phase 10), which helps. If Cloudflare Web Analytics is added, prefer the scriptless option.
+- [x] Added `/.well-known/security.txt` (RFC 9116), generated by `src/pages/.well-known/security.txt.ts` from `siteConfig.email` so it can't drift; `Expires` renews on every build.
+
+### 12.5 Get categorized explicitly (once real content is live)
+- [ ] Look up `www.collante.org` in **Zscaler Site Review** (sitereview.zscaler.com) and request a category if it's unknown or wrong. Pick the closest *business/professional* category the form offers (professional services, or an IT/technology category) rather than a personal-blog category — "personal sites and blogs" is restricted on some corporate policies.
+- [ ] Do the same with the other major vendors, since the readers' employers won't all use Zscaler: Palo Alto Networks (URL Filtering "Test A Site"), Cisco Talos Intelligence, Fortinet FortiGuard, Broadcom/Symantec Site Review, Forcepoint, and Trellix (formerly McAfee) TrustedSource. Use the same requested category everywhere.
+- [ ] Check reputation and blocklists: VirusTotal (all engines clean), Google Safe Browsing site status.
+
+### 12.6 Verify from the inside
+- [ ] Ask one or two people on Zscaler-protected corporate networks (ideally different companies) to open the homepage and an article page, and to screenshot anything other than the site itself. Repeat after any recategorization.
+- [ ] Re-check the category lookups roughly a month after launch, and again after any major content change.
+
+**Definition of done:** Zscaler Site Review (and at least Palo Alto and Talos) show `www.collante.org` in a business/professional category with no risk flags; VirusTotal is clean; and at least one person on a Zscaler-protected corporate network has opened the site without a block or warning page.
+
+**Commit:** `docs: corporate-proxy reachability plan` (plus `chore: security.txt` if added). Most of this phase is account-side work in Cloudflare, the registrar, and the vendors' review forms, not code.
 
 ---
 

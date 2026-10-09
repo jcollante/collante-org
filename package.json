@@ -13,6 +13,8 @@
     "render:diagrams": "node scripts/render-mermaid.ts",
     "check": "astro check",
     "test:a11y": "node scripts/check-a11y.ts",
+    "test:third-party": "node scripts/check-third-party.ts",
+    "check:launch": "node scripts/check-placeholders.ts",
     "validate:content": "astro sync",
     "validate:adr": "astro sync"
   },

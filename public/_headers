@@ -3,3 +3,14 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  # Deliberately short until HTTPS + the apex->www redirect are confirmed on the live domain.
+  # Then raise to max-age=31536000; includeSubDomains (see plan.MD Phase 12.3).
+  Strict-Transport-Security: max-age=300
+
+# Keep the Cloudflare Pages preview hosts out of search engines and URL classifiers,
+# so only www.collante.org builds a reputation (plan.MD Phase 12.2).
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex
