@@ -6,6 +6,8 @@ import { siteConfig } from "../lib/site";
 
 interface Props {
   title: string;
+  /** Overrides the document <title> and og:title when the H1 is too long for search results. */
+  seoTitle?: string;
   description: string;
   date: Date;
   updatedDate?: Date;
@@ -23,6 +25,7 @@ interface Props {
 
 const {
   title,
+  seoTitle,
   description,
   date,
   updatedDate,
@@ -54,10 +57,10 @@ const jsonLd = {
 };
 ---
 
-<BaseLayout title={`${title} — collante.org`} description={description}>
+<BaseLayout title={seoTitle ?? `${title} — collante.org`} description={description}>
   <Fragment slot="head">
     <link rel="canonical" href={canonicalUrl} />
-    <meta property="og:title" content={title} />
+    <meta property="og:title" content={seoTitle ?? title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="article" />
     <meta property="og:url" content={canonicalUrl} />
@@ -173,6 +176,27 @@ const jsonLd = {
     background: var(--color-surface);
     border: var(--border-width) solid var(--color-line);
     padding: 0.1em 0.35em;
+  }
+
+  /*
+    Fenced code blocks, highlighted at build time by Astro's built-in Shiki
+    (theme set in astro.config.mjs). Shiki emits tabindex="0" on <pre>, so a
+    horizontally scrolling block stays keyboard-reachable.
+  */
+  .article__body :global(pre) {
+    margin-top: var(--space-5);
+    padding: var(--space-4) var(--space-5);
+    border: var(--border-width) solid var(--color-line);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    overflow-x: auto;
+  }
+
+  .article__body :global(pre code) {
+    font-size: inherit;
+    background: none;
+    border: none;
+    padding: 0;
   }
 
   /*

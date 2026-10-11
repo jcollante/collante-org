@@ -1,5 +1,6 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
+import { seriesIds } from "./lib/series";
 
 const contentStatus = z.enum(["draft", "published", "archived"]);
 
@@ -151,6 +152,13 @@ const insights = defineCollection({
   schema: z.object({
     ...baseFields,
     insightType: z.enum(["perspective", "deep-dive", "comparison", "guide"]).default("perspective"),
+    seoTitle: z.string().min(1).optional(),
+    series: z
+      .object({
+        id: z.enum(seriesIds),
+        part: z.number().int().positive(),
+      })
+      .optional(),
   }),
 });
 

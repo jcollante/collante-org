@@ -1,0 +1,148 @@
+---
+/**
+ * HTML/CSS-tier diagram: four stacked application layers with the shared
+ * core concerns running alongside them. Built from markup rather than SVG so
+ * it reflows to a single column on narrow viewports instead of scaling text
+ * down or scrolling horizontally. The parent Figure owns the accessible name
+ * and description (role="img"), so nothing here needs its own ARIA.
+ */
+const layers = [
+  { name: "Presentation layer", detail: "Streamlit pages, widgets, session state" },
+  { name: "Application services", detail: "Business logic, validation, operations" },
+  { name: "Data access layer", detail: "Repositories, queries, connection handling" },
+  { name: "Databricks platform", detail: "SQL warehouse, Unity Catalog tables", platform: true },
+];
+
+const sharedConcerns = ["Error handling", "Logging", "Operation context"];
+---
+
+<div class="layered-arch">
+  <ol class="layered-arch__stack">
+    {
+      layers.map((layer) => (
+        <li class:list={["layered-arch__layer", { "layered-arch__layer--platform": layer.platform }]}>
+          <span class="layered-arch__name">{layer.name}</span>
+          <span class="layered-arch__detail">{layer.detail}</span>
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="layered-arch__shared">
+    <span class="layered-arch__shared-label">Shared concerns</span>
+    <span class="layered-arch__shared-path">core/</span>
+    <ul class="layered-arch__shared-list">
+      {sharedConcerns.map((concern) => <li>{concern}</li>)}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .layered-arch {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 13rem;
+    gap: var(--space-5);
+    padding: var(--space-5);
+    border: var(--border-width) solid var(--color-line);
+    background: var(--color-surface);
+    font-family: var(--font-mono);
+  }
+
+  /* Prefixed with .layered-arch to outrank ArticleLayout's prose list rules
+     (.article__body ol/ul/li + li), which would otherwise add bullets,
+     indentation, and per-item margins. */
+  .layered-arch .layered-arch__stack {
+    display: grid;
+    margin: 0;
+    gap: var(--space-5);
+    list-style: none;
+    padding: 0;
+  }
+
+  .layered-arch .layered-arch__layer {
+    margin: 0;
+    position: relative;
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-3) var(--space-4);
+    border: 1.25px solid var(--color-text-muted);
+    background: var(--color-surface);
+  }
+
+  /* Downward flow arrow between consecutive layers (decorative; the
+     Figure description carries the flow for assistive tech). */
+  .layered-arch__layer + .layered-arch__layer::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: calc(-1 * var(--space-5));
+    height: var(--space-5);
+    border-left: 1.5px solid var(--color-text-muted);
+  }
+
+  .layered-arch__layer + .layered-arch__layer::after {
+    content: "";
+    position: absolute;
+    left: calc(50% - 4px);
+    top: -7px;
+    border-inline: 4.75px solid transparent;
+    border-top: 6px solid var(--color-text-muted);
+  }
+
+  .layered-arch__layer--platform {
+    background: var(--color-bg);
+  }
+
+  .layered-arch__name {
+    font-size: var(--text-sm);
+    color: var(--color-text);
+  }
+
+  .layered-arch__detail {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .layered-arch__shared {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    padding: var(--space-3) var(--space-4);
+    border: 2px solid var(--color-accent);
+    background: var(--color-accent-tint);
+  }
+
+  .layered-arch__shared-label {
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+  }
+
+  .layered-arch__shared-path {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .layered-arch .layered-arch__shared-list {
+    display: grid;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    list-style: none;
+    padding: 0;
+    font-size: var(--text-xs);
+    color: var(--color-text);
+  }
+
+  .layered-arch .layered-arch__shared-list li {
+    margin: 0;
+    padding: var(--space-2) var(--space-3);
+    border: var(--border-width) solid var(--color-accent);
+    background: var(--color-surface);
+  }
+
+  @media (max-width: 40rem) {
+    .layered-arch {
+      grid-template-columns: minmax(0, 1fr);
+      padding: var(--space-4);
+    }
+  }
+</style>

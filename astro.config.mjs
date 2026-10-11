@@ -13,5 +13,9 @@ export default defineConfig({
   server: {
     allowedHosts: true
   },
+  markdown: {
+    // Light theme to match the site's light-only palette (Shiki defaults to github-dark).
+    shikiConfig: { theme: 'github-light' }
+  },
   integrations: [mdx(), sitemap()]
 });

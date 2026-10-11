@@ -1,0 +1,83 @@
+---
+/**
+ * Lists every part of a series. A part is linked only when a published
+ * Insight claims it (via `series.id` + `series.part`); parts without one are
+ * shown as planned, unlinked, so the outline never points at a missing page.
+ */
+import { getCollection } from "astro:content";
+import { isListable } from "../lib/content";
+import { series, type SeriesId } from "../lib/series";
+
+interface Props {
+  id: SeriesId;
+  currentPart: number;
+}
+
+const { id, currentPart } = Astro.props;
+const { title, parts } = series[id];
+
+const published = new Map<number, string>();
+for (const entry of (await getCollection("insights")).filter(isListable)) {
+  if (entry.data.series?.id === id) published.set(entry.data.series.part, `/insights/${entry.id}/`);
+}
+---
+
+<nav class="series" aria-label={`Series: ${title}`}>
+  <p class="series__title"><strong>Series: {title}</strong></p>
+  <ol class="series__list">
+    {
+      parts.map(({ part, title: partTitle }) => {
+        const href = published.get(part);
+        const label = `Part ${part}:`;
+        if (part === currentPart) {
+          return (
+            <li class="series__item series__item--current" aria-current="page">
+              <strong>{label}</strong> {partTitle}
+            </li>
+          );
+        }
+        return (
+          <li class="series__item">
+            {href ? (
+              <a href={href}>
+                <strong>{label}</strong> {partTitle}
+              </a>
+            ) : (
+              <>
+                <strong>{label}</strong> {partTitle} <em>(planned)</em>
+              </>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>
+
+<style>
+  .series {
+    margin-top: var(--space-7);
+    padding-top: var(--space-5);
+    border-top: var(--border-width) solid var(--color-line);
+  }
+
+  /* Reset the article body's generic list styling — this is navigation, not prose. */
+  .series .series__list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: var(--space-3);
+  }
+
+  .series__item {
+    padding-left: var(--space-4);
+    border-left: 2px solid transparent;
+  }
+
+  .series__item--current {
+    border-left-color: var(--color-accent);
+  }
+
+  .series__item em {
+    color: var(--color-text-muted);
+  }
+</style>
