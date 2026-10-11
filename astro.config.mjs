@@ -15,7 +15,21 @@ export default defineConfig({
   },
   markdown: {
     // Light theme to match the site's light-only palette (Shiki defaults to github-dark).
-    shikiConfig: { theme: 'github-light' }
+    shikiConfig: {
+      theme: 'github-light',
+      transformers: [
+        {
+          // github-light's orange (#E36209) is ~3.5:1 on white and fails the
+          // WCAG AA contrast check; swap it for a darker orange (~5:1).
+          span(node) {
+            const style = node.properties.style;
+            if (typeof style === 'string') {
+              node.properties.style = style.replace(/#E36209/gi, '#BC4C00');
+            }
+          }
+        }
+      ]
+    }
   },
   integrations: [mdx(), sitemap()]
 });
